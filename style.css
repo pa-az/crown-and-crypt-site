@@ -43,3 +43,20 @@ li{margin:4px 0}
 .icon{width:96px;height:96px;border-radius:22px;display:block;margin:6px auto 0;box-shadow:0 6px 18px rgba(0,0,0,.5)}
 footer{border-top:1px solid var(--line);text-align:center;padding:20px 16px 32px;color:var(--dim);font-size:14px}
 footer a{color:var(--dim)}
+/* the barrow mist: two soft banks drifting across the backdrop, slow enough to feel rather than see */
+.hero::after{content:"";position:absolute;left:-40%;right:-40%;top:120px;height:320px;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 30% 22% at 20% 60%,rgba(200,205,210,.16),transparent 70%),
+    radial-gradient(ellipse 26% 18% at 55% 45%,rgba(200,205,210,.12),transparent 70%),
+    radial-gradient(ellipse 34% 20% at 85% 65%,rgba(200,205,210,.14),transparent 70%);
+  filter:blur(6px);animation:drift 38s ease-in-out infinite alternate}
+.hero.small::after{top:40px;height:200px;opacity:.8}
+body::before{content:"";position:fixed;left:-30%;right:-30%;bottom:-60px;height:260px;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 28% 40% at 25% 70%,rgba(190,196,202,.07),transparent 70%),
+    radial-gradient(ellipse 32% 45% at 70% 80%,rgba(190,196,202,.06),transparent 70%);
+  filter:blur(8px);animation:drift 52s ease-in-out infinite alternate-reverse}
+body{position:relative;isolation:isolate}
+@keyframes drift{from{transform:translateX(-6%)}to{transform:translateX(6%)}}
+@media (prefers-reduced-motion:reduce){.hero::after,body::before{animation:none}}
+html,body{overflow-x:clip}.hero{overflow-x:clip}
