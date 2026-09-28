@@ -127,3 +127,9 @@ footer a{color:var(--dim)}
 /* the trailer, as wide as the page allows */
 .trailer video{display:block;width:100%;max-width:960px;aspect-ratio:16/9;margin:8px auto 0;border-radius:8px;background:#000;
   box-shadow:0 0 0 1px rgba(217,166,43,.35),0 24px 60px rgba(0,0,0,.6)}
+
+/* the way into the browser teaser */
+.play{margin:14px auto 0;text-align:center}
+.play a{display:inline-block;padding:11px 20px;border-radius:8px;border:1px solid var(--gold);color:var(--gold);font-weight:700;
+  letter-spacing:.04em;text-decoration:none;background:rgba(217,166,43,.08);text-shadow:0 2px 8px rgba(0,0,0,.8)}
+.play a:hover{background:rgba(217,166,43,.18)}
