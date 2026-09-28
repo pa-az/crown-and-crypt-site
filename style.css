@@ -1,7 +1,10 @@
 @font-face{font-family:"Maguntia";src:url(assets/UnifrakturMaguntia.woff2) format("woff2");font-display:swap}
 @font-face{font-family:"Alegreya Sans";font-weight:400;src:url(assets/Alegreya-Sans-wght-400.woff2) format("woff2");font-display:swap}
 @font-face{font-family:"Alegreya Sans";font-weight:700;src:url(assets/Alegreya-Sans-wght-700.woff2) format("woff2");font-display:swap}
-:root{
+/* dark by design, and said so: dark-mode extensions such as Noir in Safari
+   leave a page alone only when its styles carry a prefers-color-scheme rule */
+@media (prefers-color-scheme: dark){:root{color-scheme:dark}}
+:root{color-scheme:dark;
   --bg:#101215;--pane:#181b1f;--pane2:#1e2227;--line:rgba(228,218,194,.13);
   --ink:#e4dac2;--body:#d3c9b0;--dim:#9f998b;--gold:#d9a62b;--gold-dim:#c9a45a;
   --ribbon:#5a221c;--ribbon-edge:#8a6a2a;--bone:#e4dac2;--madder:#b8483a;
