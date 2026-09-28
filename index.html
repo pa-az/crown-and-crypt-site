@@ -1,25 +1,66 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Crown &amp; Crypt</title><meta name="description" content="A turn-based tactics game: the last of the king's knights against the dead, on small 7x7 fields.">
+<title>Crown &amp; Crypt</title>
+<meta name="description" content="A turn-based tactics game: the last of the king's knights against the dead, on small 7x7 fields.">
+<meta property="og:title" content="Crown &amp; Crypt"><meta property="og:description" content="The last of the king's knights against the dead. A turn-based tactics game.">
+<meta property="og:image" content="https://pa-az.github.io/crown-and-crypt-site/assets/og.jpg">
 <link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css"></head><body>
-<header class="hero"><div class="mist"></div><img class="crest" src="assets/crest.webp" alt="A knight's helm and a crowned skull, a lance between them">
-<div class="ribbon"><h1><span class="c">Crown</span><span class="a">&amp;</span><span class="y">Crypt</span></h1></div>
+<link rel="stylesheet" href="style.css?v=4"></head><body>
+<header class="hero"><div class="bg"></div><div class="fog c"></div><div class="fog a"></div><div class="fog b"></div><div class="shade"></div>
+<img class="crest" src="assets/crest.webp" alt="A knight's helm and a crowned skull, a lance between them">
+<div class="ribbon"><h1 class="t"><span class="c">Crown</span><span class="a">&amp;</span><span class="y">Crypt</span></h1></div>
+<p class="tag">The barrows have opened. What was buried walks again, and the last of the king's knights ride out to meet it.</p>
+<div class="stores"><span><b>App Store</b> coming soon</span><span><b>Google Play</b> coming soon</span><span><b>Steam</b> coming soon</span></div>
 <nav><a href="./" aria-current="page">Home</a><a href="support.html">Support</a><a href="privacy.html">Privacy</a></nav>
-</header><main>
-<p class="lede">The barrows have opened. What was buried walks again, and the last of the king's knights ride out to meet it.</p>
+</header>
+
+<section>
+<div class="eyebrow">Turn-based tactics</div><h2>Nothing is hidden</h2>
+<p class="intro">Every field is seven tiles by seven, and every blow shows its cost before you strike: who is hurt, who is knocked back, who drowns. The dead are cunning. You always know the price of your move.</p>
+<div class="shots">
+<figure class="phone"><img src="assets/shot-gate.webp" alt="The Gatehouse: knights behind a wall and gate, the dead massing beyond it"><figcaption>The Gatehouse: hold the gate</figcaption></figure>
+<figure class="phone"><img src="assets/shot-ford.webp" alt="The Charnel Ford: a river between the knights and the dead"><figcaption>The Charnel Ford: one crossing, or make another</figcaption></figure>
+</div>
+<div class="points">
+<div class="point"><h3>Position is the weapon</h3><p>Shove the dead into water, drag them into fire, bring walls down on their heads.</p></div>
+<div class="point"><h3>Hold what they come to burn</h3><p>Villages, windmills and keeps stand on the field. Lose them and the field is lost.</p></div>
+<div class="point"><h3>Change the ground itself</h3><p>A boulder fills a river, a stone breaks a wall, and the field you finish on is not the one you began.</p></div>
+</div>
+</section>
+
+<div class="rule"></div>
+
+<section>
+<div class="eyebrow">Your knights</div><h2>The last of the king's riders</h2>
+<p class="intro">Seven kinds of knight, each with one blow and one way to turn a fight.</p>
+<div class="roster"><article class="unit"><img src="assets/unit-lancer.webp" alt=""><h3>Knight</h3><div class="hp">4 health &middot; 3 tiles</div><p>Four health and a couched lance: 2 damage to the next tile and a shove behind it.</p></article><article class="unit"><img src="assets/unit-billhook.webp" alt=""><h3>Billhook</h3><div class="hp">3 health &middot; 3 tiles</div><p>Hooks up to three tiles off and drags the dead two tiles in, into water or fire if you choose.</p></article><article class="unit"><img src="assets/unit-crossbow.webp" alt=""><h3>Crossbow</h3><div class="hp">3 health &middot; 3 tiles</div><p>Three tiles of reach, and the heavy bolt shoves what it hits.</p></article><article class="unit"><img src="assets/unit-longbow.webp" alt=""><h3>Longbow</h3><div class="hp">3 health &middot; 3 tiles</div><p>Flies the whole length of the board until it hits something.</p></article><article class="unit"><img src="assets/unit-catapult.webp" alt=""><h3>Catapult</h3><div class="hp">2 health &middot; 2 tiles</div><p>Lobs a stone over anything. 2 damage, and all four tiles around it shoved out.</p></article><article class="unit"><img src="assets/unit-trebuchet.webp" alt=""><h3>Trebuchet</h3><div class="hp">2 health &middot; 1 tiles</div><p>A boulder over anything on the diagonal. In open water it stays and makes a crossing.</p></article><article class="unit"><img src="assets/unit-chaplain.webp" alt=""><h3>Chaplain</h3><div class="hp">3 health &middot; 3 tiles</div><p>Carries no weapon. A point of health back, a hex broken, or plague fog lifted.</p></article></div>
+</section>
+
+<section class="dead" style="padding-top:10px">
+<div class="eyebrow" style="color:var(--madder)">The dead</div><h2 style="color:var(--bone)">What the barrows let out</h2>
+<p class="intro">They read your reply before they strike, and they never tire.</p>
+<div class="roster"><article class="unit"><img src="assets/unit-ghoul.webp" alt=""><h3>Ghoul</h3><div class="hp">3 health &middot; 3 tiles</div><p>Three tiles a turn, then 2 damage and a shove the moment it reaches you.</p></article><article class="unit"><img src="assets/unit-bonearcher.webp" alt=""><h3>Bone Archer</h3><div class="hp">2 health &middot; 2 tiles</div><p>Shoots down a whole rank, however far.</p></article><article class="unit"><img src="assets/unit-boneking.webp" alt=""><h3>Bone King</h3><div class="hp">5 health &middot; 2 tiles</div><p>2 damage on all four sides at once, and far too heavy to shove.</p></article><article class="unit"><img src="assets/unit-slinger.webp" alt=""><h3>Plague Slinger</h3><div class="hp">2 health &middot; 2 tiles</div><p>Throws over anything and leaves a fog that poisons whoever stands in it.</p></article><article class="unit"><img src="assets/unit-priest.webp" alt=""><h3>Grave Priest</h3><div class="hp">2 health &middot; 2 tiles</div><p>Raises a ghoul beside it every turn it lives. Kill it and the rite breaks.</p></article><article class="unit"><img src="assets/unit-witch.webp" alt=""><h3>Barrow Witch</h3><div class="hp">2 health &middot; 2 tiles</div><p>Hexes the ground three tiles off. Hexed ground grips the feet and can cost a whole turn.</p></article><article class="unit"><img src="assets/unit-mantlet.webp" alt=""><h3>Mantlet</h3><div class="hp">3 health &middot; 2 tiles</div><p>A rolling siege shield. Your arrows stop against it; theirs pass through.</p></article></div>
+</section>
+
+<div class="band"><div class="bg"></div><div class="fog a"></div>
+<section>
+<div class="eyebrow">The road</div><h2>Three marches</h2>
+<p class="intro">Ten short lessons teach every knight and every foe. Then the road, field after field, each harder than the last.</p>
+<div class="marches">
+<div class="march"><img class="em" src="assets/emblem-1.webp" alt=""><h3>The First March</h3><div class="n">Nine fields</div><p>Walls and gates, fords and villages. The dead learn your knights as you do.</p><div class="biomes"><img src="assets/biome-road.webp" alt=""><img src="assets/biome-ford.webp" alt=""><img src="assets/biome-hall.webp" alt=""></div></div>
+<div class="march"><img class="em" src="assets/emblem-2.webp" alt=""><h3>The Long March</h3><div class="n">Eight fields</div><p>Witches in the wood and priests in the hall. New foes and harder ground.</p><div class="biomes"><img src="assets/biome-heath.webp" alt=""><img src="assets/biome-marsh.webp" alt=""><img src="assets/biome-barrow.webp" alt=""></div></div>
+<div class="march"><img class="em" src="assets/emblem-3.webp" alt=""><h3>The Last March</h3><div class="n">Eight fields</div><p>Bone Kings behind walls and lava, and the dead planning as one. The hardest of the road.</p><div class="biomes"><img src="assets/biome-barrow.webp" alt=""><img src="assets/biome-hall.webp" alt=""><img src="assets/biome-marsh.webp" alt=""></div></div>
+</div>
+<div class="stars"><img src="assets/star-on.webp" alt=""><img src="assets/star-on.webp" alt=""><img src="assets/star-off.webp" alt=""></div>
+<p class="intro" style="margin-top:10px">Three stars on every field: win it, keep every knight standing, and win it quickly.</p>
+</section></div>
+
+<section class="close">
+<img class="sheet" src="assets/sheet-ending.webp" alt="">
+<p class="quote">The barrows are quiet. The dead lie where they fell, and the knights ride home.</p>
 <img class="icon" src="assets/icon-256.png" alt="Crown &amp; Crypt app icon">
-<div class="stores"><span>App Store: coming soon</span><span>Google Play: coming soon</span><span>Steam: coming soon</span></div>
-<h2>The game</h2>
-<p>Crown &amp; Crypt is a turn-based tactics game played on small 7x7 fields. Each field is a puzzle of position: shove the dead into water, drag them into fire, bring walls down on their heads, and hold the villages they come to burn.</p>
-<p>Before you commit a blow, the board shows exactly what it will do: who is hurt, who is knocked back, who drowns. The dead are cunning, but you always know the cost of your move.</p>
-<h2>The road</h2>
-<ul>
-<li>Ten short lesson fields teach every knight and every foe.</li>
-<li>Three marches of hard fields, each harder than the last.</li>
-<li>Three stars on every field, and hints when you are stuck.</li>
-<li>Painted art and an original score.</li>
-<li>No account, no ads, plays offline. On iPhone, Android and PC.</li>
-</ul>
-</main>
-<footer>&copy; 2026 Crown &amp; Crypt &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></footer></body></html>
+<div class="stores"><span><b>App Store</b> coming soon</span><span><b>Google Play</b> coming soon</span><span><b>Steam</b> coming soon</span></div>
+<p class="muted" style="margin-top:18px">No account, no ads, plays offline. Painted art and an original score.</p>
+</section>
+<footer>&copy; 2026 Crown &amp; Crypt &middot; <a href="support.html">Support</a> &middot; <a href="privacy.html">Privacy</a></footer>
+</body></html>

@@ -2,71 +2,115 @@
 @font-face{font-family:"Alegreya Sans";font-weight:400;src:url(assets/Alegreya-Sans-wght-400.woff2) format("woff2");font-display:swap}
 @font-face{font-family:"Alegreya Sans";font-weight:700;src:url(assets/Alegreya-Sans-wght-700.woff2) format("woff2");font-display:swap}
 :root{
-  --bg:#121417;--pane:#1b1e22;--line:rgba(228,218,194,.14);
-  --ink:#e4dac2;--dim:#a39d8e;--gold:#d9a62b;--gold-dim:#c9a45a;--ribbon:#5a221c;--ribbon-edge:#8a6a2a;
+  --bg:#101215;--pane:#181b1f;--pane2:#1e2227;--line:rgba(228,218,194,.13);
+  --ink:#e4dac2;--body:#d3c9b0;--dim:#9f998b;--gold:#d9a62b;--gold-dim:#c9a45a;
+  --ribbon:#5a221c;--ribbon-edge:#8a6a2a;--bone:#e4dac2;--madder:#b8483a;
 }
 *{box-sizing:border-box;margin:0}
-html{background:var(--bg)}
-body{background:var(--bg);color:var(--ink);font:17px/1.6 "Alegreya Sans",system-ui,-apple-system,sans-serif;min-height:100vh}
-a{color:var(--gold)}
-a:hover{color:#f0c55a}
-.hero{position:relative;isolation:isolate;text-align:center;padding:28px 16px 8px}
-.hero::before{content:"";position:absolute;inset:0 0 auto 0;height:420px;z-index:-1;
-  background:url(assets/backdrop.webp) center top/cover no-repeat;filter:brightness(.6) saturate(.85);
-  -webkit-mask:linear-gradient(#000 55%,transparent);mask:linear-gradient(#000 55%,transparent)}
-.hero.small::before{height:230px;filter:brightness(.4) saturate(.8)}
-.crest{width:min(58vw,230px);aspect-ratio:1;mix-blend-mode:lighten;display:block;margin:0 auto -4px;
-  -webkit-mask:radial-gradient(closest-side,#000 72%,transparent);mask:radial-gradient(closest-side,#000 72%,transparent)}
-.hero.small .crest{width:120px}
+html{background:var(--bg);overflow-x:clip}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 "Alegreya Sans",system-ui,-apple-system,sans-serif;overflow-x:clip}
+img{display:block;max-width:100%}
+a{color:var(--gold)} a:hover{color:#f0c55a}
+
+/* ---------- hero: the barrow at dusk, mist rolling through it ---------- */
+.hero{position:relative;isolation:isolate;overflow:hidden;text-align:center;padding:30px 16px 40px;min-height:min(100svh,860px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center}
+.hero .bg{position:absolute;inset:0;z-index:-3;background:url(assets/backdrop.webp) center 30%/cover no-repeat;filter:brightness(.62) saturate(.9)}
+.hero .shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(16,18,21,.2) 0%,transparent 35%,rgba(16,18,21,.35) 70%,var(--bg) 100%)}
+.fog{position:absolute;left:0;right:0;z-index:-2;pointer-events:none;background:url(assets/fog.png) 0 0/1024px 100% repeat-x;
+  animation:roll 30s linear infinite;will-change:background-position}
+.fog.a{top:34%;height:320px;opacity:.95}
+.fog.b{top:52%;height:260px;opacity:.7;animation-duration:19s;animation-direction:reverse;background-size:820px 100%}
+.fog.c{top:12%;height:220px;opacity:.35;animation-duration:44s;background-size:1300px 100%}
+@keyframes roll{from{background-position-x:0}to{background-position-x:-1024px}}
+.fog.b{animation-name:rollb}@keyframes rollb{from{background-position-x:0}to{background-position-x:-820px}}
+.fog.c{animation-name:rollc}@keyframes rollc{from{background-position-x:0}to{background-position-x:-1300px}}
+@media (prefers-reduced-motion:reduce){.fog{animation-duration:120s!important}}
+
+.crest{width:min(64vw,300px);aspect-ratio:1;mix-blend-mode:lighten;margin:0 auto -6px;
+  -webkit-mask:radial-gradient(closest-side,#000 72%,transparent);mask:radial-gradient(closest-side,#000 72%,transparent);
+  animation:rise 1.4s ease-out both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .ribbon{display:inline-block;position:relative;background:var(--ribbon);border:1.5px solid var(--ribbon-edge);
-  padding:4px 26px 8px;margin:0 22px;box-shadow:0 4px 14px rgba(0,0,0,.5)}
-.ribbon::before,.ribbon::after{content:"";position:absolute;top:10px;bottom:-10px;width:28px;background:#3a1714;z-index:-1}
-.ribbon::before{left:-22px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,35% 50%)}
-.ribbon::after{right:-22px;clip-path:polygon(0 0,100% 0,65% 50%,100% 100%,0 100%)}
-.ribbon h1,.ribbon .t{font:400 clamp(34px,10vw,52px)/1.1 "Maguntia",serif;letter-spacing:1px;white-space:nowrap}
-.ribbon .c{color:var(--gold)} .ribbon .a{color:var(--gold-dim);font-size:.8em;margin:0 .3em} .ribbon .y{color:var(--ink)}
-.hero.small .ribbon h1,.hero.small .ribbon .t{font-size:clamp(28px,8vw,38px)}
-nav{display:flex;justify-content:center;gap:22px;margin:22px 0 4px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:13px}
+  padding:4px 26px 9px;margin:0 22px;box-shadow:0 6px 18px rgba(0,0,0,.55),inset 0 0 0 5px rgba(138,106,42,.12)}
+.ribbon::before,.ribbon::after{content:"";position:absolute;top:12px;bottom:-12px;width:30px;background:#3a1714;z-index:-1}
+.ribbon::before{left:-24px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,35% 50%)}
+.ribbon::after{right:-24px;clip-path:polygon(0 0,100% 0,65% 50%,100% 100%,0 100%)}
+.ribbon .t{font:400 clamp(36px,11vw,60px)/1.1 "Maguntia",serif;letter-spacing:1px;white-space:nowrap}
+.ribbon .c{color:var(--gold)} .ribbon .a{color:var(--gold-dim);font-size:.8em;margin:0 .3em} .ribbon .y{color:var(--bone)}
+.tag{font-size:clamp(18px,4.6vw,21px);max-width:540px;margin:26px auto 0;color:var(--ink);text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.stores{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:24px 0 0}
+.stores span{background:rgba(16,18,21,.6);border:1px solid rgba(217,166,43,.35);border-radius:8px;padding:9px 15px;color:var(--ink);font-size:14px;letter-spacing:.04em;backdrop-filter:blur(4px)}
+.stores b{color:var(--gold);font-weight:700}
+
+nav{display:flex;justify-content:center;gap:22px;margin:22px 0 0;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:13px}
 nav a{color:var(--dim);text-decoration:none;padding:6px 2px;border-bottom:1px solid transparent}
 nav a:hover,nav a[aria-current]{color:var(--gold);border-color:var(--gold)}
-main{max-width:680px;margin:0 auto;padding:12px 16px 56px}
-.lede{font-size:19px;text-align:center;color:var(--ink);margin:18px auto 26px;max-width:560px}
-h2{font:400 28px/1.2 "Maguntia",serif;color:var(--gold);margin:34px 0 10px}
-h3{font-size:17px;margin:22px 0 4px;color:var(--ink)}
-p,ul{margin:0 0 12px;color:#d6ccb3}
-ul{padding-left:22px}
-li{margin:4px 0}
+
+/* ---------- sections ---------- */
+section{max-width:1040px;margin:0 auto;padding:56px 16px}
+.eyebrow{font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--gold);text-align:center}
+h2{font:400 clamp(30px,7vw,42px)/1.15 "Maguntia",serif;color:var(--gold);text-align:center;margin:6px 0 12px}
+.intro{max-width:620px;margin:0 auto 30px;text-align:center;color:var(--body);font-size:18px}
+p{color:var(--body)}
+.rule{height:1px;max-width:340px;margin:0 auto;background:linear-gradient(90deg,transparent,rgba(217,166,43,.5),transparent);position:relative}
+.rule::after{content:"";position:absolute;left:50%;top:-4px;width:8px;height:8px;background:var(--gold);transform:translateX(-50%) rotate(45deg)}
+
+/* the game itself, in phone frames */
+.shots{display:flex;gap:18px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+.phone{width:min(300px,86vw);border-radius:30px;padding:10px;background:linear-gradient(160deg,#2a2e33,#15171a);
+  box-shadow:0 20px 50px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.06)}
+.phone img{border-radius:22px;width:100%}
+.phone figcaption{text-align:center;color:var(--dim);font-size:14px;padding:10px 6px 2px}
+.points{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:34px}
+.point{background:var(--pane);border:1px solid var(--line);border-radius:8px;padding:16px 18px}
+.point h3{font-size:17px;color:var(--ink);margin-bottom:4px}
+.point p{font-size:16px;line-height:1.5}
+
+/* the rosters */
+.roster{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}.roster .unit{flex:0 1 150px}@media(min-width:900px){.roster .unit{flex-basis:130px}}
+.unit{background:linear-gradient(180deg,var(--pane2),var(--pane));border:1px solid var(--line);border-radius:10px;padding:14px 12px 14px;text-align:center}
+.unit img{width:88px;height:88px;margin:0 auto 8px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.6))}
+.unit h3{font:400 23px/1.1 "Maguntia",serif;color:var(--gold)}
+.dead .unit h3{color:var(--bone)}
+.unit .hp{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin:3px 0 6px}
+.unit p{font-size:14.5px;line-height:1.45}
+.dead .unit{background:linear-gradient(180deg,#1f1c1d,#171516);border-color:rgba(184,72,58,.22)}
+
+/* the marches */
+.band{position:relative;isolation:isolate;overflow:hidden}
+.band .bg{position:absolute;inset:0;z-index:-2;background:url(assets/screen.webp) center/cover;filter:brightness(.28) saturate(.8)}
+.band .fog{top:40%;height:260px;opacity:.45}
+.marches{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.march{background:rgba(20,22,26,.78);border:1px solid rgba(217,166,43,.28);border-radius:10px;padding:18px;text-align:center;backdrop-filter:blur(3px)}
+.march img.em{width:72px;height:72px;margin:0 auto 8px;border-radius:8px;box-shadow:0 0 0 1px rgba(0,0,0,.6),0 4px 12px rgba(0,0,0,.6)}
+.march h3{font:400 26px/1.1 "Maguntia",serif;color:var(--gold)}
+.march .n{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:4px 0 8px}
+.march p{font-size:15.5px}
+.biomes{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.biomes img{width:38px;height:38px;border-radius:6px;box-shadow:0 0 0 1px rgba(0,0,0,.6)}
+.stars{display:flex;gap:4px;justify-content:center;margin:22px 0 0}
+.stars img{width:34px;height:34px}
+
+/* the close */
+.close{text-align:center;padding-bottom:70px}
+.close .sheet{width:min(800px,100%);margin:0 auto 22px;border-radius:10px;box-shadow:0 14px 40px rgba(0,0,0,.6);
+  -webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.close .quote{font:400 clamp(22px,5vw,28px)/1.35 "Maguntia",serif;color:var(--ink);max-width:640px;margin:0 auto}
+.icon{width:104px;height:104px;border-radius:24px;margin:26px auto 0;box-shadow:0 8px 22px rgba(0,0,0,.6)}
+
+/* inner pages */
+.hero.small{min-height:0;padding:26px 16px 22px}
+.hero.small .crest{width:130px;animation:none}
+.hero.small .ribbon .t{font-size:clamp(28px,8vw,38px)}
+.hero.small .fog.a{top:30%;height:200px}.hero.small .fog.b{top:50%;height:160px}.hero.small .fog.c{display:none}
+main{max-width:680px;margin:0 auto;padding:18px 16px 56px}
+main h2{text-align:left;font-size:32px;margin:30px 0 10px}
+main h3{font-size:17px;margin:22px 0 4px;color:var(--ink)}
+main p,main ul{margin:0 0 12px}
+main ul{padding-left:22px;color:var(--body)}
 .muted{color:var(--dim);font-size:15px}
-.card{background:var(--pane);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin:14px 0}
-.stores{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:8px 0 6px}
-.stores span{border:1px solid var(--line);border-radius:6px;padding:9px 14px;color:var(--dim);font-size:15px}
-.icon{width:96px;height:96px;border-radius:22px;display:block;margin:6px auto 0;box-shadow:0 6px 18px rgba(0,0,0,.5)}
-footer{border-top:1px solid var(--line);text-align:center;padding:20px 16px 32px;color:var(--dim);font-size:14px}
+.card{background:var(--pane);border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin:14px 0}
+.card h3{margin-top:0}
+footer{border-top:1px solid var(--line);text-align:center;padding:22px 16px 34px;color:var(--dim);font-size:14px}
 footer a{color:var(--dim)}
-/* the barrow mist: banks of fog rolling across the backdrop and along the foot of
-   the page. Each layer is twice the width of the screen with its pattern repeated
-   once, so sliding it by half loops without a seam */
-.hero::after,.hero .mist{content:"";position:absolute;left:0;width:200%;top:150px;height:300px;z-index:-1;pointer-events:none;
-  background:
-    radial-gradient(ellipse 14% 30% at 12% 55%,rgba(205,210,215,.30),transparent 70%),
-    radial-gradient(ellipse 18% 24% at 32% 40%,rgba(205,210,215,.22),transparent 70%),
-    radial-gradient(ellipse 12% 28% at 44% 70%,rgba(205,210,215,.26),transparent 70%);
-  background-size:50% 100%;background-repeat:repeat-x;
-  filter:blur(10px);animation:roll 26s linear infinite}
-.hero .mist{top:210px;height:240px;opacity:.8;animation-duration:17s;animation-direction:reverse;
-  background:
-    radial-gradient(ellipse 16% 26% at 20% 50%,rgba(205,210,215,.22),transparent 70%),
-    radial-gradient(ellipse 13% 30% at 40% 65%,rgba(205,210,215,.18),transparent 70%);
-  background-size:50% 100%;background-repeat:repeat-x}
-.hero.small::after{top:60px;height:200px}
-.hero.small .mist{top:100px;height:170px}
-body::before{content:"";position:fixed;left:0;width:200%;bottom:-40px;height:280px;z-index:-1;pointer-events:none;
-  background:
-    radial-gradient(ellipse 16% 40% at 15% 70%,rgba(190,196,202,.14),transparent 70%),
-    radial-gradient(ellipse 20% 45% at 38% 80%,rgba(190,196,202,.11),transparent 70%);
-  background-size:50% 100%;background-repeat:repeat-x;
-  filter:blur(12px);animation:roll 40s linear infinite}
-body{position:relative;isolation:isolate}
-@keyframes roll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media (prefers-reduced-motion:reduce){.hero::after,.hero .mist,body::before{animation:none}}
-html,body{overflow-x:clip}.hero{overflow-x:clip}
