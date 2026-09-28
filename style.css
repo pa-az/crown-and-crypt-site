@@ -43,20 +43,30 @@ li{margin:4px 0}
 .icon{width:96px;height:96px;border-radius:22px;display:block;margin:6px auto 0;box-shadow:0 6px 18px rgba(0,0,0,.5)}
 footer{border-top:1px solid var(--line);text-align:center;padding:20px 16px 32px;color:var(--dim);font-size:14px}
 footer a{color:var(--dim)}
-/* the barrow mist: two soft banks drifting across the backdrop, slow enough to feel rather than see */
-.hero::after{content:"";position:absolute;left:-40%;right:-40%;top:120px;height:320px;z-index:-1;pointer-events:none;
+/* the barrow mist: banks of fog rolling across the backdrop and along the foot of
+   the page. Each layer is twice the width of the screen with its pattern repeated
+   once, so sliding it by half loops without a seam */
+.hero::after,.hero .mist{content:"";position:absolute;left:0;width:200%;top:150px;height:300px;z-index:-1;pointer-events:none;
   background:
-    radial-gradient(ellipse 30% 22% at 20% 60%,rgba(200,205,210,.16),transparent 70%),
-    radial-gradient(ellipse 26% 18% at 55% 45%,rgba(200,205,210,.12),transparent 70%),
-    radial-gradient(ellipse 34% 20% at 85% 65%,rgba(200,205,210,.14),transparent 70%);
-  filter:blur(6px);animation:drift 38s ease-in-out infinite alternate}
-.hero.small::after{top:40px;height:200px;opacity:.8}
-body::before{content:"";position:fixed;left:-30%;right:-30%;bottom:-60px;height:260px;z-index:-1;pointer-events:none;
+    radial-gradient(ellipse 14% 30% at 12% 55%,rgba(205,210,215,.30),transparent 70%),
+    radial-gradient(ellipse 18% 24% at 32% 40%,rgba(205,210,215,.22),transparent 70%),
+    radial-gradient(ellipse 12% 28% at 44% 70%,rgba(205,210,215,.26),transparent 70%);
+  background-size:50% 100%;background-repeat:repeat-x;
+  filter:blur(10px);animation:roll 26s linear infinite}
+.hero .mist{top:210px;height:240px;opacity:.8;animation-duration:17s;animation-direction:reverse;
   background:
-    radial-gradient(ellipse 28% 40% at 25% 70%,rgba(190,196,202,.07),transparent 70%),
-    radial-gradient(ellipse 32% 45% at 70% 80%,rgba(190,196,202,.06),transparent 70%);
-  filter:blur(8px);animation:drift 52s ease-in-out infinite alternate-reverse}
+    radial-gradient(ellipse 16% 26% at 20% 50%,rgba(205,210,215,.22),transparent 70%),
+    radial-gradient(ellipse 13% 30% at 40% 65%,rgba(205,210,215,.18),transparent 70%);
+  background-size:50% 100%;background-repeat:repeat-x}
+.hero.small::after{top:60px;height:200px}
+.hero.small .mist{top:100px;height:170px}
+body::before{content:"";position:fixed;left:0;width:200%;bottom:-40px;height:280px;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 16% 40% at 15% 70%,rgba(190,196,202,.14),transparent 70%),
+    radial-gradient(ellipse 20% 45% at 38% 80%,rgba(190,196,202,.11),transparent 70%);
+  background-size:50% 100%;background-repeat:repeat-x;
+  filter:blur(12px);animation:roll 40s linear infinite}
 body{position:relative;isolation:isolate}
-@keyframes drift{from{transform:translateX(-6%)}to{transform:translateX(6%)}}
-@media (prefers-reduced-motion:reduce){.hero::after,body::before{animation:none}}
+@keyframes roll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.hero::after,.hero .mist,body::before{animation:none}}
 html,body{overflow-x:clip}.hero{overflow-x:clip}
