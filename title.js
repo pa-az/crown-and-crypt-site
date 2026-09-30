@@ -5,7 +5,7 @@
    this script the title is simply centred. */
 (function(){
   const ribbon = document.querySelector(".ribbon"), crest = document.querySelector(".crest");
-  if(!ribbon || !crest) return;
+  if(!ribbon || !crest){ if(ribbon) ribbon.classList.add("placed"); return; }
   const t = ribbon.querySelector(".t"), c = ribbon.querySelector(".c"), a = ribbon.querySelector(".a"), y = ribbon.querySelector(".y");
   const ctx = document.createElement("canvas").getContext("2d");
   const ink = (el, text) => {
@@ -27,6 +27,11 @@
     const amp = ab.left + (ia.from + ia.to) / 2, pike = cb.left + cb.width / 2;
     ribbon.style.transform = "translateX(" + (pike - amp).toFixed(1) + "px)";
   }
-  (document.fonts ? document.fonts.ready : Promise.resolve()).then(fit);
+  /* shown only once placed, so it never jumps; a font that never comes
+     still lets it show after a moment */
+  let shown = false;
+  const show = () => { if(shown) return; shown = true; fit(); ribbon.classList.add("placed"); };
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(show);
+  setTimeout(show, 1500);
   addEventListener("resize", fit);
 })();

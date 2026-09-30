@@ -34,9 +34,11 @@ a{color:var(--gold)} a:hover{color:#f0c55a}
   -webkit-mask:radial-gradient(closest-side,#000 72%,transparent);mask:radial-gradient(closest-side,#000 72%,transparent);
   animation:rise 1.4s ease-out both}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.ribbon{display:inline-block;position:relative;background:var(--ribbon);border:1.5px solid var(--ribbon-edge);
+/* the banner as the game's menu has it: 40% of the red, so the dusk shows
+   through and darkens it; the words stay solid */
+.ribbon{display:inline-block;position:relative;background:rgba(90,34,28,.4);border:1.5px solid var(--ribbon-edge);
   padding:4px 26px 9px;margin:0 22px;box-shadow:0 6px 18px rgba(0,0,0,.55),inset 0 0 0 5px rgba(138,106,42,.12)}
-.ribbon::before,.ribbon::after{content:"";position:absolute;top:12px;bottom:-12px;width:30px;background:#3a1714;z-index:-1}
+.ribbon::before,.ribbon::after{content:"";position:absolute;top:12px;bottom:-12px;width:30px;background:rgba(58,23,20,.4);z-index:-1}
 .ribbon::before{left:-24px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,35% 50%)}
 .ribbon::after{right:-24px;clip-path:polygon(0 0,100% 0,65% 50%,100% 100%,0 100%)}
 .ribbon .t{font:400 clamp(36px,11vw,60px)/1.1 "Maguntia",serif;letter-spacing:1px;white-space:nowrap}
@@ -136,3 +138,9 @@ footer a{color:var(--dim)}
 .play a{display:inline-block;padding:11px 20px;border-radius:8px;border:1px solid var(--gold);color:var(--gold);font-weight:700;
   letter-spacing:.04em;text-decoration:none;background:rgba(217,166,43,.08);text-shadow:0 2px 8px rgba(0,0,0,.8)}
 .play a:hover{background:rgba(217,166,43,.18)}
+
+/* the banner is placed by title.js once the blackletter has loaded (the "&"
+   under the pike, the red evened round the ink); until then it is held back
+   and then faded in, or it was seen to jump into place */
+.placing .ribbon{opacity:0}
+.ribbon.placed{opacity:1;transition:opacity .5s ease-out}
