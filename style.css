@@ -78,7 +78,15 @@ p{color:var(--body)}
 .unit img{width:88px;height:88px;margin:0 auto 8px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.6))}
 .unit h3{font:400 23px/1.1 "Maguntia",serif;color:var(--gold)}
 .dead .unit h3{color:var(--bone)}
-.unit .hp{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin:3px 0 6px}
+/* the game's own marks under each unit: health, walks, damage, reach, two by two */
+.unit .marks{display:grid;grid-template-columns:auto auto;justify-content:center;gap:4px 14px;margin:6px 0 8px;font-weight:700;font-size:14px;color:var(--bone)}
+.unit .marks span,.mki{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.unit .marks img{width:18px;height:18px}
+.mki{font-weight:700;vertical-align:-3px}
+.mki img{width:17px;height:17px}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 6px;margin:-4px 0 18px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.legend img{width:18px;height:18px;margin-left:8px}
+.legend img:first-child{margin-left:0}
 .unit p{font-size:14.5px;line-height:1.45}
 .dead .unit{background:linear-gradient(180deg,#1f1c1d,#171516);border-color:rgba(184,72,58,.22)}
 
