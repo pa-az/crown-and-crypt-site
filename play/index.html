@@ -647,8 +647,8 @@ h1{
   box-shadow:0 0 0 2px rgba(10,12,14,.9),0 0 10px rgba(217,166,43,.55)}
 .hintbtn .hintn:empty{display:none}
 .hintbtn .hintn.out{background:var(--madder);color:#fff;box-shadow:0 0 0 2px rgba(10,12,14,.9)}
-/* a field opened with a hint: the lamp is lit, the count goes, the name
-   says Free and a gold halo breathes behind it for as long as the field
+/* a field opened with a hint: the lamp is lit, the count goes, and a gold
+   halo breathes behind it for as long as the field
    lasts (the owner's word, 2026-09-30), only its opacity moving */
 .hintbtn.open{color:var(--gold);border-color:rgba(217,166,43,.45)}
 .hintbtn.open::before{content:"";position:absolute;left:50%;top:-2px;width:48px;height:48px;margin-left:-24px;border-radius:50%;
@@ -2416,7 +2416,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 204;
+const VERSION = "1.0", BUILD = 205;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -8600,7 +8600,7 @@ function renderHintBtn(){
   n.textContent = m === null || open ? "" : String(left);
   n.classList.toggle("out", m !== null && left <= 0 && !open);
   b.classList.toggle("open", (m !== null && open) || tut);
-  b.dataset.label = tut || (m !== null && open) ? "Free" : "Hint";
+  b.dataset.label = "Hint";
   /* in the tutorial the lamp glows until a hint has been seen once, so the
      free help is found without being pressed on anyone */
   b.classList.toggle("glow", ctx.kind === "tutorial" && !hintSeen() && !b.disabled);
