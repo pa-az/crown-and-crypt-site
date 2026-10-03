@@ -211,8 +211,8 @@ function processBlock(header, html) {
 
 
 /* Rewrite url(data:image/...) references inside the inlined <style> block.
-   The CSS URL is resolved relative to the HTML document at /play/, so the
-   replacement path is `img/<key>.webp`. */
+   The CSS URL is resolved relative to /play/index.html, while assets live in
+   the site's shared /assets/img/ directory. */
 function processCss(html) {
   const styleRe = /(<style>)([\s\S]*?)(<\/style>)/;
   const m = styleRe.exec(html);
@@ -227,7 +227,7 @@ function processCss(html) {
     const prefix = css.slice(Math.max(0, offset - 200), offset);
     const varMatch = prefix.match(/(--[\w-]+)\s*:\s*$/);
     const key = varMatch
-      ? 'css_' + varMatch[1].slice(2).replace(/-/g, '_')
+      ? 'css_' + varMatch[1].slice(2).replace(/-/g, '_') + '_' + shortHash(buf)
       : 'css_' + shortHash(buf);
     const dest = path.join(IMG_DIR, key + '.webp');
     if (!fs.existsSync(dest) || !fs.readFileSync(dest).equals(buf)) {
@@ -236,7 +236,7 @@ function processCss(html) {
       console.log(`  wrote ${(buf.length/1024).toFixed(1)} KB -> ${path.relative('.', dest)} (css)`);
     }
     count++;
-    return `url(img/${key}.webp)`;
+    return `url(../assets/img/${key}.webp)`;
   });
 
   const cssSvgRe = /url\((\s*["']?)(data:image\/[^)]+)\1\)/g;
@@ -252,7 +252,7 @@ function processCss(html) {
       console.log(`  wrote ${(buf.length/1024).toFixed(1)} KB -> ${path.relative('.', dest)} (css svg)`);
     }
     count++;
-    return `url(img/${key}.svg)`;
+    return `url(../assets/img/${key}.svg)`;
   });
 
   if (!count) return html;

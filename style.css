@@ -33,7 +33,7 @@ a{color:var(--gold)} a:hover{color:#f0c55a}
 .crest{width:min(64vw,245px);aspect-ratio:1;mix-blend-mode:lighten;margin:0 auto -34px;
   -webkit-mask:radial-gradient(closest-side,#000 72%,transparent);mask:radial-gradient(closest-side,#000 72%,transparent);
   animation:rise 1.4s ease-out both}
-@keyframes rise{from{opacity:0;transform:translateY(calc(var(--crest-offset,20px) + 10px))}to{opacity:1;transform:translateY(var(--crest-offset,20px))}}
+@keyframes rise{from{opacity:0;transform:translateY(calc(var(--crest-offset,30px) + 10px))}to{opacity:1;transform:translateY(var(--crest-offset,30px))}}
 /* the banner as the game's menu has it: 40% of the red, so the dusk shows
    through and darkens it; the words stay solid */
 .wordmark-heading{margin:0;line-height:0}
@@ -110,7 +110,7 @@ p{color:var(--body)}
 
 /* inner pages */
 .hero.small{min-height:0;padding:26px 16px 22px}
-.hero.small .crest{width:130px;animation:none;transform:translateY(20px)}
+.hero.small .crest{width:130px;animation:none;transform:translateY(30px)}
 .hero.small .wordmark{width:min(78vw,245px);transform:translate(-5px,-28px)}
 .hero.small .fog.a{top:30%;height:200px}.hero.small .fog.b{top:50%;height:160px}.hero.small .fog.c{display:none}
 main{max-width:680px;margin:0 auto;padding:18px 16px 56px}
