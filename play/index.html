@@ -2416,7 +2416,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 202;
+const VERSION = "1.0", BUILD = 203;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -2618,20 +2618,25 @@ const Engine = (() => {
         [{aim:"N", from:[4, 3], to:[3, 3]}, {aim:[0, 3], from:[1, 5], to:[2, 5]}, {aim:"N", from:[4, 4], to:[3, 2]}, {from:[3, 5], to:[3, 5]}],
         [{from:[3, 3], to:[6, 3]}, {aim:"N", from:[3, 2], to:[4, 3]}, {aim:"N", from:[3, 5], to:[4, 6]}, {from:[2, 5], to:[2, 5]}],
         [{aim:[4, 3], from:[2, 5], to:[2, 5]}, {from:[4, 5], to:[3, 5]}, {aim:"N", from:[4, 6], to:[4, 6]}, {aim:"W", from:[6, 3], to:[6, 3]}]]}},
-    {march:1, level:"The Hollow Crown", field:{name:"The Hollow Crown", win:"clear", turns:0, biome:"marsh", brief:"Two Bone Kings, a Grave Priest raising help, and pools of cold water. The Kings won't shove. Everything around them will. Kill the priest before his congregation grows.",
-      map:[".......", "T.....T", "...B...", ".B...B.", ".......", ".......", "I.....I"],
-      ground:["kkkgkkk", "kkkkkk.", "kkkkkkk", "kkkkk.k", "kkkkkkk", "kkkkkkk", "kkkkkkk"],
-      knights:[{type:"lancer", x:3, y:5}, {type:"billhook", x:1, y:5}, {type:"catapult", x:3, y:6}, {type:"longbow", x:5, y:5}],
-      undead:[{type:"boneking", x:2, y:1}, {type:"boneking", x:4, y:1}, {type:"bonearcher", x:1, y:0}, {type:"bonearcher", x:5, y:0}, {type:"ghoul", x:0, y:2}, {type:"ghoul", x:6, y:2}, {type:"priest", x:3, y:0}],
-      schedule:{}, team:true, par:7, music:"march1c", winMusic:"win3", lossMusic:"loss2",
-      tints:{"0,1":"#41582d", "6,1":"#41582d", "1,2":"#324323", "2,2":"#324323", "4,2":"#324323", "5,2":"#324323", "6,2":"#41582d", "0,3":"#41582d", "2,3":"#324323", "4,3":"#324323", "6,3":"#324323", "1,4":"#324323", "6,4":"#324323", "0,5":"#41582d", "6,5":"#41582d", "0,6":"#41582d", "1,6":"#41582d", "2,6":"#324323", "3,6":"#324323", "4,6":"#324323", "5,6":"#41582d", "6,6":"#41582d"},
+    {march:1, level:"The Twin Gates", field:{name:"The Twin Gates", win:"clear", turns:0, biome:"marsh", brief:"Two gates, two Chaplains, two Barrow Witches. It's that kind of day. Keep the hexes off your Longbow.",
+      map:[".......", ".......", ".......", "BBB.BBB", "SSS.SSS", "..E.E..", "SSS.SSS"],
+      ground:["eg.e.ge", "..geg.e", "gggg.gg", "ge.e.g.", "ccccc..", "ccccccc", ".cccc.."],
+      knights:[{type:"chaplain", x:6, y:5}, {type:"longbow", x:3, y:5}, {type:"chaplain", x:0, y:5}],
+      undead:[{type:"witch", x:1, y:1}, {type:"witch", x:5, y:1}, {type:"bonearcher", x:2, y:0}, {type:"bonearcher", x:4, y:0}, {type:"slinger", x:3, y:0}],
+      schedule:{}, links:{"0,6":""}, par:11, music:"march2b",
+      tints:{"2,0":"#18292f", "3,0":"#18292f", "4,0":"#18292f", "5,0":"#232f18", "1,1":"#28182f", "5,1":"#28182f", "3,3":"#232f18", "4,3":"#232f18", "0,4":"#232f18", "1,4":"#232f18", "2,4":"#232f18", "3,4":"#232f18", "4,4":"#232f18", "5,4":"#232f18", "6,4":"#232f18", "0,5":"#232f18", "1,5":"#232f18", "2,5":"#232f18", "4,5":"#232f18", "5,5":"#232f18", "6,5":"#232f18", "0,6":"#232f18", "1,6":"#232f18", "2,6":"#232f18", "3,6":"#232f18", "4,6":"#232f18", "5,6":"#232f18", "6,6":"#232f18"},
+      looks:{"2,5":1, "4,5":3},
       line:[
-        [{aim:"N", from:[1, 5], to:[0, 5]}, {aim:"W", from:[3, 5], to:[1, 4]}, {aim:[3, 0], from:[3, 6], to:[3, 4]}, {aim:"N", from:[5, 5], to:[2, 5]}],
-        [{aim:"N", from:[2, 5], to:[2, 6]}, {aim:[5, 5], from:[3, 4], to:[2, 5]}, {from:[1, 4], to:[1, 6]}, {aim:"E", from:[0, 5], to:[0, 3]}],
-        [{aim:"E", from:[1, 6], to:[1, 4]}, {aim:"N", from:[0, 3], to:[1, 1]}, {aim:"E", from:[2, 6], to:[0, 5]}],
-        [{aim:"N", from:[1, 4], to:[2, 2]}, {aim:"S", from:[1, 1], to:[2, 0]}, {from:[0, 5], to:[0, 3]}],
-        [{from:[2, 1], to:[3, 0]}, {aim:"E", from:[0, 3], to:[0, 3]}, {from:[2, 0], to:[1, 0]}],
-        [{from:[1, 0], to:[0, 0]}, {aim:"W", from:[3, 0], to:[3, 1]}, {aim:"E", from:[0, 3], to:[1, 1]}]]}},
+        [{aim:"N", from:[3, 5], to:[3, 5]}, {from:[6, 5], to:[6, 5]}, {from:[0, 5], to:[0, 5]}],
+        [{aim:[3, 5], from:[6, 5], to:[5, 5]}, {aim:[0, 5], from:[0, 5], to:[0, 5]}, {aim:"N", from:[3, 5], to:[3, 5]}],
+        [{aim:[3, 5], from:[0, 5], to:[1, 5]}, {from:[5, 5], to:[6, 5]}, {aim:"N", from:[3, 5], to:[3, 5]}],
+        [{aim:"N", from:[3, 5], to:[3, 6]}, {aim:[6, 5], from:[1, 5], to:[4, 5]}, {aim:[4, 5], from:[6, 5], to:[5, 5]}],
+        [{aim:"N", from:[3, 6], to:[3, 6]}, {aim:[5, 5], from:[4, 5], to:[3, 5]}, {from:[5, 5], to:[6, 5]}],
+        [{aim:[6, 5], from:[3, 5], to:[5, 5]}, {aim:"N", from:[3, 6], to:[3, 5]}, {aim:[5, 5], from:[6, 5], to:[6, 5]}],
+        [{aim:[6, 5], from:[6, 5], to:[6, 5]}, {aim:"N", from:[3, 5], to:[3, 3]}, {aim:[3, 3], from:[5, 5], to:[3, 5]}],
+        [{aim:"N", from:[3, 3], to:[3, 4]}, {aim:[3, 4], from:[6, 5], to:[5, 5]}, {from:[3, 5], to:[3, 5]}],
+        [{aim:[3, 4], from:[5, 5], to:[5, 5]}, {aim:"E", from:[3, 4], to:[3, 1]}, {from:[3, 5], to:[3, 5]}],
+        [{aim:[5, 5], from:[5, 5], to:[5, 5]}, {aim:"S", from:[3, 1], to:[3, 1]}]]}},
     {march:1, level:"The Cinder Causeway", field:{name:"The Cinder Causeway", win:"clear", turns:0, biome:"road", brief:"Little islands of fire all over the field. Anything you shove has somewhere hot to go.",
       map:[".......", ".LL.LL.", ".......", "LL...LL", ".......", ".LL.LL.", "......."],
       ground:["ooooooo", "ooooooo", "ooooooo", "..ooo..", "ooooooo", "o..o..o", "ooooooo"],
@@ -2670,7 +2675,7 @@ const Engine = (() => {
         [{aim:"N", from:[5, 3], to:[6, 3]}, {aim:[6, 2], from:[5, 4], to:[6, 5]}, {aim:"N", from:[1, 3], to:[0, 1]}, {aim:"N", from:[4, 6], to:[4, 6]}],
         [{aim:[5, 3], from:[6, 5], to:[5, 6]}, {aim:"W", from:[6, 4], to:[6, 3]}, {aim:"E", from:[4, 6], to:[4, 3]}, {from:[0, 1], to:[1, 3]}],
         [{aim:"W", from:[1, 3], to:[1, 3]}, {from:[4, 3], to:[4, 3]}, {from:[6, 3], to:[6, 2]}, {aim:[5, 3], from:[5, 6], to:[5, 6]}]]}},
-    {march:2, level:"The Twin Gates", field:{name:"The Twin Gates", win:"clear", turns:0, biome:"marsh", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
+    {march:2, level:"The Hollow Crown", field:{name:"The Hollow Crown", win:"clear", turns:0, biome:"marsh", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
     {march:2, level:"The Warded Gate", field:{name:"The Warded Gate", win:"clear", turns:0, biome:"heath", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
     {march:2, level:"The Witch Hollow", field:{name:"The Witch Hollow", win:"clear", turns:0, biome:"hall", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
     {march:2, level:"The Wide Muster", field:{name:"The Wide Muster", win:"clear", turns:0, biome:"witchwood", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
@@ -6167,12 +6172,12 @@ async function decodeAll(){
         const bin = atob(b64);
         const arr = new Uint8Array(bin.length);
         for(let j = 0; j < bin.length; j++) arr[j] = bin.charCodeAt(j);
-        const buf = await SFX_CTX.decodeAudioData(arr.buffer);
+        const buf = await ctx.decodeAudioData(arr.buffer);
         SFX[k] = buf;
       } else if(typeof src === 'string'){
         const res = await fetch(src);
         const arr = await res.arrayBuffer();
-        const buf = await SFX_CTX.decodeAudioData(arr);
+        const buf = await ctx.decodeAudioData(arr);
         SFX[k] = buf;
       }
     }catch(e){ console.warn('decodeAll', k, e); }

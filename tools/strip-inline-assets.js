@@ -307,12 +307,12 @@ async function decodeAll(){
         const bin = atob(b64);
         const arr = new Uint8Array(bin.length);
         for(let j = 0; j < bin.length; j++) arr[j] = bin.charCodeAt(j);
-        const buf = await SFX_CTX.decodeAudioData(arr.buffer);
+        const buf = await ctx.decodeAudioData(arr.buffer);
         SFX[k] = buf;
       } else if(typeof src === 'string'){
         const res = await fetch(src);
         const arr = await res.arrayBuffer();
-        const buf = await SFX_CTX.decodeAudioData(arr);
+        const buf = await ctx.decodeAudioData(arr);
         SFX[k] = buf;
       }
     }catch(e){ console.warn('decodeAll', k, e); }
@@ -440,4 +440,3 @@ function main() {
 }
 
 main();
-
