@@ -1555,21 +1555,10 @@ html,body{overflow-x:hidden}
   background:var(--screen-art,none) center bottom/cover no-repeat;filter:brightness(.36) saturate(.8);
   -webkit-mask:linear-gradient(#000 55%,transparent 100%);mask:linear-gradient(#000 55%,transparent 100%)}
 .crest-art[hidden],.board.crest[hidden]{display:none}
-/* the name in an old blackletter on a flat red ribbon under the crest
-   (the owner's pick from seven mockups, 2026-09-26). The ampersand is
-   centred on the ribbon's curve on its own, so it sits under the lance's
-   foot whatever the words' widths; the crown in the knights' gold, the
-   crypt in the bone of the dead */
+/* the title lockup sits under the painted knight-and-crowned-skeleton crest */
 .menu-title{margin-top:0;line-height:0}
-.menu-title svg{display:block;width:min(100%,393px);height:auto;margin:0 auto;overflow:visible;
+.menu-title img{display:block;width:min(76vw,300px);height:auto;margin:0 auto;
   filter:drop-shadow(0 3px 8px rgba(0,0,0,.55))}
-.menu-title text{font-family:"UnifrakturMaguntia","Grenze Gotisch",serif;font-size:52px;letter-spacing:1.5px}
-.menu-title .crown{fill:var(--gold)}
-.menu-title .amp{fill:#C9A45A;font-size:42px;letter-spacing:0}
-.menu-title .crypt{fill:var(--bone)}
-/* the ribbon lets the painted ground behind it show through (40%, the owner's
-   word after 62%); the words stay solid */
-.menu-title .ribbon{fill-opacity:.4}
 .menu{display:flex;flex-direction:column;gap:8px;margin-top:14px}
 .entry[hidden]{display:none}
 /* an achievement won: a banner dropping in at the top, over everything */
@@ -1954,7 +1943,7 @@ html,body{overflow-x:hidden}
     -webkit-mask:linear-gradient(#000 64%,transparent 100%);mask:linear-gradient(#000 64%,transparent 100%)}
   #screen-menu .menu-top{padding-top:0;gap:0}
   #screen-menu .crest-art{width:clamp(150px,33vh,400px);margin-bottom:-1.5vh}
-  #screen-menu .menu-title svg{width:clamp(280px,44vh,520px)}
+  #screen-menu .menu-title img{width:min(76vw,300px)}
   #screen-menu .menu{margin-top:0;width:clamp(300px,24vw,370px);gap:9px}
   #screen-menu .entry{padding:clamp(9px,1.5vh,13px) 18px;background:rgba(12,17,22,.66)}
   #screen-menu .entry:hover{background:rgba(217,166,43,.1)}
@@ -2103,21 +2092,7 @@ html,body{overflow-x:hidden}
       </svg>
     </div>
     <img class="crest-art" id="crest-art" alt="" hidden>
-    <h1 class="menu-title" aria-label="Crown &amp; Crypt"><svg viewBox="0 294 393 82" aria-hidden="true">
-      <!-- the ribbon is centred on the words (x 186.8), not the lance: Crown is wider than Crypt -->
-      <g class="ribbon">
-      <path d="M-14,310 L20,310 L20,370 L-14,370 L-2,340 Z M387.6,310 L353.6,310 L353.6,370 L387.6,370 L375.6,340 Z" fill="#3a1714"/>
-      <path d="M20,370 L6,360 L20,360 Z M353.6,370 L367.6,360 L353.6,360 Z" fill="#240d0b"/>
-      <rect x="5.8" y="300" width="362" height="60" fill="#5a221c" stroke="#8a6a2a" stroke-width="1.6"/>
-      </g>
-      <path d="M11.8,306 H361.8 M11.8,354 H361.8" stroke="#8a6a2a" stroke-opacity=".35" stroke-width="1"/>
-      <!-- the ampersand stands alone at the lance's x, the words either side of it -->
-      <!-- dx evens the ink between letters to 4 units, measured in the x-height
-           band: the face sets r-o at 2.4 and o-w at 4.8 on its own -->
-      <text class="crown" x="168.5" y="346" text-anchor="end" dx="0 0 1.6 -0.8 -0.3">Crown</text>
-      <text class="amp" x="196.5" y="346" text-anchor="middle">&amp;</text>
-      <text class="crypt" x="224.5" y="346" text-anchor="start" dx="0 0 -0.1 1.2 0.8">Crypt</text>
-    </svg></h1>
+    <h1 class="menu-title" aria-label="Crown &amp; Crypt"><img src="brand/title-lockup.png" alt=""></h1>
   </div>
   <nav class="menu" aria-label="Main menu">
     <button class="entry key" id="go-run">
@@ -2416,7 +2391,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 205;
+const VERSION = "1.0", BUILD = 206;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
