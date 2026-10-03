@@ -30,15 +30,15 @@ a{color:var(--gold)} a:hover{color:#f0c55a}
 .fog.c{animation-name:rollc}@keyframes rollc{from{background-position-x:0}to{background-position-x:-1300px}}
 @media (prefers-reduced-motion:reduce){.fog{animation-duration:120s!important}}
 
-.crest{width:min(64vw,300px);aspect-ratio:1;mix-blend-mode:lighten;margin:0 auto -6px;
+.crest{width:min(64vw,245px);aspect-ratio:1;mix-blend-mode:lighten;margin:0 auto -34px;
   -webkit-mask:radial-gradient(closest-side,#000 72%,transparent);mask:radial-gradient(closest-side,#000 72%,transparent);
   animation:rise 1.4s ease-out both}
-@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(calc(var(--crest-offset,20px) + 10px))}to{opacity:1;transform:translateY(var(--crest-offset,20px))}}
 /* the banner as the game's menu has it: 40% of the red, so the dusk shows
    through and darkens it; the words stay solid */
 .wordmark-heading{margin:0;line-height:0}
-.wordmark{display:block;width:min(88vw,340px);height:auto;margin:0 auto;
-  filter:drop-shadow(0 6px 12px rgba(0,0,0,.72))}
+.wordmark{display:block;width:min(88vw,245px);height:auto;margin:0 auto;transform:translate(var(--wordmark-x,-5px),var(--wordmark-y,-28px));
+  filter:brightness(.72) saturate(.82) drop-shadow(0 6px 12px rgba(0,0,0,.72))}
 .tag{font-size:clamp(18px,4.6vw,21px);max-width:540px;margin:26px auto 0;color:var(--ink);text-shadow:0 2px 10px rgba(0,0,0,.8)}
 .stores{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:24px 0 0}
 .stores span{background:rgba(16,18,21,.6);border:1px solid rgba(217,166,43,.35);border-radius:8px;padding:9px 15px;color:var(--ink);font-size:14px;letter-spacing:.04em;backdrop-filter:blur(4px)}
@@ -110,8 +110,8 @@ p{color:var(--body)}
 
 /* inner pages */
 .hero.small{min-height:0;padding:26px 16px 22px}
-.hero.small .crest{width:130px;animation:none}
-.hero.small .wordmark{width:min(78vw,260px)}
+.hero.small .crest{width:130px;animation:none;transform:translateY(20px)}
+.hero.small .wordmark{width:min(78vw,245px);transform:translate(-5px,-28px)}
 .hero.small .fog.a{top:30%;height:200px}.hero.small .fog.b{top:50%;height:160px}.hero.small .fog.c{display:none}
 main{max-width:680px;margin:0 auto;padding:18px 16px 56px}
 main h2{text-align:left;font-size:32px;margin:30px 0 10px}

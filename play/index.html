@@ -1457,7 +1457,7 @@ h1{
    reach (the owner's word, 2026-09-28: the top left corner is the one place
    a thumb cannot get to). The computer's layout keeps it in the corner */
 @media not all and (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
-  .screen{padding-bottom:calc(28px + 70px)}
+  .screen:not(#screen-menu){padding-bottom:calc(28px + 70px)}
   .screen > .scr-head{position:fixed;left:0;right:0;bottom:0;z-index:20;justify-content:center;min-height:0;
     padding:12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
     background:linear-gradient(to top, rgba(7,10,13,.97) 62%, rgba(7,10,13,0))}
@@ -1465,22 +1465,6 @@ h1{
     font-size:13px;letter-spacing:.14em;color:var(--bone);border-radius:4px;
     border:1px solid rgba(228,218,194,.28);background:rgba(22,34,43,.94)}
   .screen > .scr-head .back svg{width:14px;height:14px}
-  /* the menu has no way back to make room for, and must not scroll (the
-     owner's word, 2026-09-28): its foot is its own, and the crest gives up
-     a little height on a shorter phone */
-  #screen-menu{padding-bottom:20px}
-  #screen-menu .crest-art{width:min(62vw,240px,calc(var(--screen) * .29))}
-}
-/* a short phone (an iPhone SE): the crest, the gaps and the entries closer */
-@media not all and (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
-  @media (max-height: 700px){
-    #screen-menu{gap:10px;padding-top:10px}
-    #screen-menu .menu-top{gap:8px;padding-top:0}
-    #screen-menu .crest-art{width:min(62vw,calc(var(--screen) * .25))}
-    #screen-menu .menu{gap:6px;margin-top:6px}
-    #screen-menu .entry{padding-block:10px}
-    #screen-menu .menu-ver{padding-top:8px}
-  }
 }
 
 /* the menu's painting, its mist and the inner screens' paintings reach the
@@ -1499,7 +1483,7 @@ html,body{overflow-x:hidden}
   overflow:visible;pointer-events:none;filter:drop-shadow(0 8px 12px rgba(0,0,0,.7))}
 .crest .tiles{filter:brightness(.72) saturate(.85)}
 /* the painted crest: its dark ground is faded out at the edges into the page */
-.crest-art{display:block;width:min(62vw,240px);aspect-ratio:1;margin-block:0 -6px;pointer-events:none;
+.crest-art{display:block;width:min(62vw,245px);aspect-ratio:1;margin-block:0 -24px;pointer-events:none;
   -webkit-mask:radial-gradient(closest-side,#000 72%,transparent 100%);mask:radial-gradient(closest-side,#000 72%,transparent 100%)}
 #screen-menu{position:relative;isolation:isolate}
 /* mist drifting low across the barrows, two banks at two speeds */
@@ -1557,9 +1541,9 @@ html,body{overflow-x:hidden}
 .crest-art[hidden],.board.crest[hidden]{display:none}
 /* the title lockup sits under the painted knight-and-crowned-skeleton crest */
 .menu-title{margin-top:0;line-height:0}
-.menu-title img{display:block;width:min(76vw,300px);height:auto;margin:0 auto;
-  filter:drop-shadow(0 3px 8px rgba(0,0,0,.55))}
-.menu{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.menu-title img{display:block;width:min(76vw,245px);height:auto;margin:0 auto;
+  filter:brightness(.72) saturate(.82) drop-shadow(0 3px 8px rgba(0,0,0,.55))}
+.menu{display:flex;flex-direction:column;gap:clamp(2px,.4vh,4px);margin-top:0}
 .entry[hidden]{display:none}
 /* an achievement won: a banner dropping in at the top, over everything */
 .ach-toast{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top, 0px));z-index:60;display:flex;align-items:center;gap:11px;
@@ -1576,6 +1560,24 @@ html,body{overflow-x:hidden}
 /* the version, small and quiet at the foot of the menu */
 .menu-ver{margin-top:auto;padding-top:14px;text-align:center;font:600 10px/1 var(--ui);letter-spacing:.12em;
   text-transform:uppercase;color:var(--bone-dim);opacity:.55}
+/* Keep every menu option and the version on-screen without scrolling. */
+#screen-menu:not([hidden]){height:var(--screen);min-height:0;overflow:hidden;gap:0;padding:4px 12px 6px}
+#screen-menu .menu-top{flex:none;gap:0;padding-top:0}
+#screen-menu .crest-art{position:relative;z-index:0;width:min(62vw,245px,calc(var(--screen) * .34));margin-bottom:-24px;transform:translateY(20px)}
+#screen-menu .menu-title{position:relative;z-index:1;flex:none;margin:0}
+#screen-menu .menu-title img{width:min(76vw,245px,calc(var(--screen) * .34));transform:translate(-5px,-42px)}
+#screen-menu .menu{flex:none;width:min(100%,370px);gap:clamp(2px,.4vh,4px);margin:0}
+#screen-menu .entry{padding:clamp(3px,.8vh,6px) 14px}
+#screen-menu .entry .e-ico{width:clamp(24px,4.2vh,30px);height:clamp(24px,4.2vh,30px)}
+#screen-menu .entry .e-t{font-size:clamp(13px,2.15vh,15.5px)}
+#screen-menu .entry .e-meta{font-size:clamp(9px,1.55vh,11px)}
+#screen-menu .menu-ver{padding-top:4px}
+@media(max-height:500px){
+  #screen-menu .crest-art{width:min(62vw,245px,calc(var(--screen) * .26))}
+  #screen-menu .menu-title img{width:min(76vw,245px,calc(var(--screen) * .3))}
+  #screen-menu .entry{padding-block:2px}
+  #screen-menu .entry .e-ico{width:24px;height:24px}
+}
 .entry{
   display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:12px;width:100%;text-align:left;
   padding:13px 14px;border:1px solid rgba(228,218,194,.15);border-radius:4px;background:rgba(22,34,43,.5);
@@ -1922,8 +1924,7 @@ html,body{overflow-x:hidden}
    both keep all of it on one screen */
 @media (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
   html,body{overflow-x:hidden}
-  #screen-menu:not([hidden]){max-width:none;height:var(--screen);min-height:0;overflow-y:auto;
-    justify-content:center;align-items:center;gap:clamp(12px,3vh,34px);padding:2vh 48px 4vh}
+  #screen-menu:not([hidden]){max-width:none;justify-content:center;align-items:center;padding:8px 48px 10px}
   #screen-menu::before,.menu-fog{height:100%}
   /* a Longbow on the left and the Bone King on the right, back to back
      either side of the crest (2026-09-29, the owner's ask, ART-LOG pass 29): only
@@ -1942,10 +1943,10 @@ html,body{overflow-x:hidden}
   #screen-menu::before{filter:brightness(.72) saturate(.9);
     -webkit-mask:linear-gradient(#000 64%,transparent 100%);mask:linear-gradient(#000 64%,transparent 100%)}
   #screen-menu .menu-top{padding-top:0;gap:0}
-  #screen-menu .crest-art{width:clamp(150px,33vh,400px);margin-bottom:-1.5vh}
-  #screen-menu .menu-title img{width:min(76vw,300px)}
-  #screen-menu .menu{margin-top:0;width:clamp(300px,24vw,370px);gap:9px}
-  #screen-menu .entry{padding:clamp(9px,1.5vh,13px) 18px;background:rgba(12,17,22,.66)}
+  #screen-menu .crest-art{width:min(245px,calc(var(--screen) * .34));margin-bottom:-24px;transform:translateY(20px)}
+  #screen-menu .menu-title img{width:min(245px,calc(var(--screen) * .34));transform:translate(-5px,-42px)}
+  #screen-menu .menu{margin-top:0;width:clamp(300px,24vw,370px);gap:clamp(2px,.4vh,4px)}
+  #screen-menu .entry{padding:clamp(3px,.8vh,6px) 18px;background:rgba(12,17,22,.66)}
   #screen-menu .entry:hover{background:rgba(217,166,43,.1)}
   #screen-menu .entry.key{background:linear-gradient(180deg,rgba(217,166,43,.2),rgba(217,166,43,.07))}
   #screen-menu .entry .e-t{font-size:17px}
@@ -2391,7 +2392,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 206;
+const VERSION = "1.0", BUILD = 207;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
