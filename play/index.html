@@ -2416,7 +2416,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 203;
+const VERSION = "1.0", BUILD = 204;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -4611,11 +4611,11 @@ const Engine = (() => {
   /* the stars a won field banks: one for the win, one for every knight still
      standing, and a third for par (a field to clear) or for holding it whole
      (a field to survive: every town, or with no towns every knight unhurt).
-     A field won with help (`hinted`, set by the game) banks the win star only:
-     the owner's word, 2026-09-26 */
+     On the road, a field won with help banks only the win star; tutorial help
+     is free and does not reduce its stars. */
   function earned(s){
     if(s.result !== "won") return {n:0, why:[]};
-    if(s.hinted) return {n:1, hinted:true, all:false, third:false, thirdWhy:""};
+    if(s.hinted && !s.def.tut) return {n:1, hinted:true, all:false, third:false, thirdWhy:""};
     const standing = s.units.filter(u => u.side === "knight");
     const all = standing.length === s.roster.length;
     let third, thirdWhy;
@@ -8593,19 +8593,20 @@ function hintsLeft(){
 function renderHintBtn(){
   const b = document.getElementById("btn-hint"), n = document.getElementById("hint-n");
   const m = hintPool(), open = hintOpen(), left = m === null ? Infinity : Hints.left(m);
+  const tut = ctx.kind === "tutorial";
   /* the march's count shows on a road field, red once the march has none
      left; on a field already opened the count goes and the lamp glows,
      since every hint there is free */
   n.textContent = m === null || open ? "" : String(left);
   n.classList.toggle("out", m !== null && left <= 0 && !open);
-  b.classList.toggle("open", m !== null && open);
-  b.dataset.label = m !== null && open ? "Free" : "Hint";
+  b.classList.toggle("open", (m !== null && open) || tut);
+  b.dataset.label = tut || (m !== null && open) ? "Free" : "Hint";
   /* in the tutorial the lamp glows until a hint has been seen once, so the
      free help is found without being pressed on anyone */
   b.classList.toggle("glow", ctx.kind === "tutorial" && !hintSeen() && !b.disabled);
   b.disabled = busy || striking || thinking || S.result !== "playing" || (!open && left <= 0) ||
     !S.units.some(u => u.side === "knight" && !u.acted);
-  b.setAttribute("aria-label", m === null ? "Hint" : open ? "Hint, this field is open" : "Hint, " + left + " left on this march");
+  b.setAttribute("aria-label", tut ? "Hint, free in the tutorial" : m === null ? "Hint" : open ? "Hint, this field is open" : "Hint, " + left + " left on this march");
 }
 document.getElementById("btn-hint").onclick = () => {
   restartAsk = false;
@@ -10767,7 +10768,7 @@ const levelDef = l => ({numeral:"?", name:l.name, brief:l.brief || "", win:l.win
   /* what the field asks of the dead and of the player, set in the editor:
      how the dead think, whether they plan as one, whether they aim a turn
      ahead, the par for the third star, and hints of its own */
-  dead:l.dead || "sharp", team:!!l.team, par:l.par || 0, hints:l.hints || 0, music:l.music || "",
+  dead:l.dead || "sharp", team:!!l.team, par:l.par || 0, hints:l.hints || 0, tut:l.tut || undefined, music:l.music || "",
   winMusic:l.winMusic || "", lossMusic:l.lossMusic || "",
   /* a winning line the editor's reading found, which the hints follow */
   line:l.line || null});
@@ -10784,16 +10785,17 @@ const TUT_BAKED = {
   "III":{"biome":"road","brief":"Bone Archers shoot straight down a row or a column. Trees stop arrows, theirs and yours, so finish each turn out of their lines. They have all the time in the world.","dead":"sharp","ground":[".....gg",".gg.ggg","mmfm.gg","gg.m...","g..m...","...m..g","...m.gg"],"hints":0,"id":"lvmu66d5ngzrvo7","knights":[{"type":"lancer","x":2,"y":5},{"type":"longbow","x":3,"y":6},{"type":"crossbow","x":4,"y":5}],"line":[[{"aim":"N","from":[3,6],"to":[3,6]},{"aim":"N","from":[4,5],"to":[3,3]},{"from":[2,5],"to":[1,6]}],[{"aim":"N","from":[3,6],"to":[2,6]},{"aim":"N","from":[3,3],"to":[2,5]},{"from":[1,6],"to":[1,6]}],[{"from":[2,5],"to":[2,2]},{"aim":"E","from":[2,6],"to":[1,5]},{"aim":"E","from":[1,6],"to":[3,5]}]],"links":{},"looks":{},"lossMusic":"loss4","map":[".......",".T.T.T.",".......",".T...T.",".......","N......","D.....J"],"music":"","name":"Behind the Trees","numeral":"III","par":4,"read":{"band":"A stroll","bots":{"played":20,"raw":0.25,"stuck":0,"wins":20},"first":0,"found":true,"margin":100,"of":"rjcdzp","raw":0.19124999999999792,"score":0,"sharp":0,"turn":3,"width":1},"reading":0,"schedule":{},"team":false,"tints":{},"turns":0,"tut":"III","undead":[{"type":"bonearcher","x":3,"y":0},{"type":"bonearcher","x":0,"y":2},{"type":"ghoul","x":6,"y":1}],"updatedAt":1790855633644,"win":"clear","winMusic":"win4"},
   "IV":{"biome":"barrow","brief":"Towns [hits 2] catch fire at the first hit and burn down at the second. Lose every town and you lose the field. The Catapult throws over anything, but its stone hurts towns too. The villagers would like a word.","dead":"sharp","ground":["h......","hh.....","hrhhnnn","chhhhhh","cchhhhh","c.hhhhh","cchhhhh"],"hints":0,"id":"lvmujz3plv9xnpx","knights":[{"type":"lancer","x":3,"y":4},{"type":"crossbow","x":2,"y":6},{"type":"catapult","x":4,"y":6}],"line":[[{"aim":"N","from":[3,4],"to":[3,1]},{"from":[2,6],"to":[2,5]},{"aim":[4,0],"from":[4,6],"to":[4,4]}],[{"aim":"E","from":[3,2],"to":[5,3]},{"aim":"N","from":[2,5],"to":[3,3]},{"aim":[3,1],"from":[4,4],"to":[3,4]}]],"links":{},"looks":{},"lossMusic":"loss4","map":[".......","..T.T..",".B...B.",".......",".......",".H...V.","......."],"music":"","name":"The Burning Towns","numeral":"IV","par":3,"read":{"band":"A stroll","bots":{"played":20,"raw":0.67,"stuck":0,"wins":20},"first":0,"found":true,"margin":85,"of":"1we8ewe","raw":0.6923076923076918,"score":1,"sharp":0.77,"turn":2,"width":1},"reading":1,"schedule":{},"team":false,"tints":{"0,3":"#433323","0,4":"#433323","0,5":"#433323","0,6":"#433323","2,0":"#433323","2,1":"#433b23","2,2":"#433323","3,1":"#433323","4,0":"#433323","4,1":"#433323","4,2":"#433323","5,1":"#433323","5,3":"#433323","6,2":"#433323","6,3":"#433323"},"turns":0,"tut":"IV","undead":[{"type":"ghoul","x":1,"y":0},{"type":"ghoul","x":5,"y":0},{"type":"bonearcher","x":3,"y":0}],"updatedAt":1790855630268,"win":"clear","winMusic":"win4"},
   "V":{"biome":"marsh","brief":"Walls [hits 3] stop arrows. Lava finishes anything shoved into it, like water. Your Trebuchet throws [dmg 2] over walls on the diagonal. Mind your step.","dead":"sharp","ground":["ccccccc","ccccccc","cc.c...",".c.ccc.",".ccccc.",".ccccc.","......."],"hints":0,"id":"lvmujz85lnue345","knights":[{"type":"lancer","x":3,"y":5},{"type":"crossbow","x":1,"y":5},{"type":"trebuchet","x":5,"y":5}],"line":[[{"aim":[1,1],"from":[5,5],"to":[4,4]},{"from":[3,5],"to":[3,5]},{"from":[1,5],"to":[1,5]}],[{"aim":[2,3],"from":[4,4],"to":[4,5]},{"aim":"E","from":[1,5],"to":[2,3]},{"aim":"N","from":[3,5],"to":[3,2]}]],"links":{},"looks":{},"lossMusic":"loss4","map":[".......",".......","SSS.SSS","S.L.L.S","S.....S","S.....S","SSSSSSS"],"music":"","name":"Stone and Fire","numeral":"V","par":3,"read":{"band":"A stroll","bots":{"played":20,"raw":0,"stuck":0,"wins":20},"first":0,"found":true,"margin":100,"of":"lw9t2w","raw":0,"score":0,"sharp":0,"turn":2,"width":1},"reading":0,"schedule":{},"team":false,"tints":{"0,2":"#3e3c38","0,3":"#3e3c38","0,4":"#3e3c38","0,5":"#3e3c38","0,6":"#3e3c38","1,2":"#3e3c38","1,3":"#3e3c38","1,4":"#3e3c38","1,5":"#3e3c38","1,6":"#3e3c38","2,2":"#3e3c38","2,3":"#3e3c38","2,4":"#3e3c38","2,5":"#3e3c38","2,6":"#3e3c38","3,5":"#3e3c38","3,6":"#3e3c38","4,2":"#3e3c38","4,3":"#3e3c38","4,4":"#3e3c38","4,5":"#3e3c38","4,6":"#3e3c38","5,2":"#3e3c38","5,3":"#3e3c38","5,4":"#3e3c38","5,5":"#3e3c38","5,6":"#3e3c38","6,2":"#3e3c38","6,3":"#3e3c38","6,4":"#3e3c38","6,5":"#3e3c38","6,6":"#3e3c38"},"turns":0,"tut":"V","undead":[{"type":"ghoul","x":3,"y":0},{"type":"bonearcher","x":1,"y":1},{"type":"slinger","x":5,"y":1}],"updatedAt":1790855626258,"win":"clear","winMusic":"win4"},
-  "VI":{"biome":"hall","brief":"The Barrow Witch hexes a tile within [reach 3 dead] each turn. Start a turn on a hex and you walk [move 2]; end one on it and you lose your next turn. The Chaplain blesses a tile within [reach 2], breaking the hex and freeing whoever it holds. Witches hate that.","dead":"sharp","ground":["rr.r.rr","rreeerr","re...er","e.....e",".......",".......","......."],"hints":0,"id":"lvmujzdi5gdgw5d","knights":[{"type":"lancer","x":2,"y":5},{"type":"crossbow","x":4,"y":5},{"type":"chaplain","x":3,"y":6}],"line":[[{"aim":"N","from":[4,5],"to":[3,3]},{"from":[2,5],"to":[3,5]},{"from":[3,6],"to":[3,6]}],[{"aim":"N","from":[3,4],"to":[5,5]},{"aim":"E","from":[3,5],"to":[4,3]},{"aim":[5,5],"from":[3,6],"to":[3,3]}],[{"aim":[5,5],"from":[3,4],"to":[4,4]},{"aim":"W","from":[4,3],"to":[4,2]},{"aim":"N","from":[5,5],"to":[2,5]}]],"links":{},"looks":{},"lossMusic":"loss4","map":["..G.G..",".......","P.....P",".......",".......","S.....S","S.....S"],"music":"","name":"The Hex","numeral":"VI","par":4,"read":{"band":"A stroll","bots":{"played":20,"raw":0.63,"stuck":0,"wins":20},"first":0,"found":true,"margin":80,"of":"kiu053","raw":0.7225000000000006,"score":1,"sharp":1,"turn":3,"width":1},"reading":1,"schedule":{},"team":false,"tints":{"0,0":"#382343","0,5":"#232b43","1,1":"#382343","1,6":"#232b43","2,5":"#233b43","3,0":"#382343","3,6":"#233b43","4,5":"#233b43","5,1":"#382343","5,6":"#232b43","6,0":"#382343","6,5":"#232b43"},"turns":0,"tut":"VI","undead":[{"type":"witch","x":3,"y":0},{"type":"ghoul","x":1,"y":1},{"type":"ghoul","x":5,"y":1}],"updatedAt":1790855662910,"win":"clear","winMusic":"win4"},
+  "VI":{"biome":"hall","brief":"The Barrow Witch hexes a tile within [reach 3 dead] each turn. Start a turn on a hex and you walk [move 2]; end one on it and you lose your next turn. A Mantlet shields her from arrows. The lance can shove it aside. The Chaplain blesses a tile within [reach 2], breaking the hex and freeing whoever it holds. Witches hate that.","dead":"sharp","ground":["rr.r.rr","rreeerr","re...er","e.....e",".......",".......","......."],"hints":0,"id":"lvmujzdi5gdgw5d","knights":[{"type":"lancer","x":2,"y":5},{"type":"crossbow","x":4,"y":5},{"type":"chaplain","x":3,"y":6}],"line":[[{"aim":"N","from":[4,5],"to":[3,4]},{"from":[2,5],"to":[2,5]},{"from":[3,6],"to":[4,6]}],[{"aim":"E","from":[3,4],"to":[1,3]},{"aim":"N","from":[2,5],"to":[1,5]},{"from":[4,6],"to":[2,6]}],[{"aim":"S","from":[1,5],"to":[4,5]},{"aim":[1,3],"from":[2,6],"to":[2,5]},{"aim":"N","from":[1,3],"to":[3,2]}]],"links":{},"looks":{},"lossMusic":"loss4","map":["..G.G..",".......","P.....P",".......",".......","S.....S","S.....S"],"music":"","name":"The Hex","numeral":"VI","par":4,"read":{"band":"A stroll","bots":{"played":20,"raw":0.62,"stuck":0,"wins":20},"first":0,"found":true,"margin":100,"of":"1pym797","raw":0.46125000000000016,"score":0,"sharp":0,"turn":3,"width":1},"reading":0,"schedule":{},"team":false,"tints":{"0,0":"#382343","0,5":"#232b43","1,1":"#382343","1,6":"#232b43","2,5":"#233b43","3,0":"#382343","3,6":"#233b43","4,5":"#233b43","5,1":"#382343","5,6":"#232b43","6,0":"#382343","6,5":"#232b43"},"turns":0,"tut":"VI","undead":[{"type":"witch","x":3,"y":0},{"type":"mantlet","x":3,"y":1},{"type":"ghoul","x":1,"y":1},{"type":"ghoul","x":5,"y":1}],"updatedAt":1791002402537,"win":"clear","winMusic":"win4"},
   "VII":{"biome":"hall","brief":"The Bone King [health 5 dead] cannot be shoved or dragged, and its cold hits all four sides at once for [dmg 2 dead]. Keep your knights apart, keep the towns standing, and cut it down. He wears the crown for a reason.","dead":"sharp","ground":["ccccccc","...c...","...c...","ccccccc","c..c..c","c.....c","......."],"hints":0,"id":"lvmujzm7jp3icol","knights":[{"type":"lancer","x":3,"y":5},{"type":"billhook","x":1,"y":5},{"type":"catapult","x":5,"y":5},{"type":"crossbow","x":3,"y":6}],"line":[[{"aim":[5,0],"from":[5,5],"to":[5,4]},{"aim":"N","from":[1,5],"to":[1,3]},{"aim":"N","from":[3,5],"to":[3,2]},{"from":[3,6],"to":[3,6]}],[{"aim":[3,1],"from":[5,4],"to":[3,4]},{"aim":"N","from":[1,3],"to":[0,3]},{"from":[3,6],"to":[3,6]},{"aim":"N","from":[3,3],"to":[3,2]}]],"links":{},"lossMusic":"loss2","map":[".......",".......","..L.L..",".......",".......",".......","H.....A"],"music":"","name":"The Bone King","numeral":"VII","par":3,"read":{"band":"A stroll","bots":{"played":20,"raw":0.5,"stuck":0,"wins":20},"first":0,"found":true,"margin":81,"of":"mdcay4","raw":0.6093750000000027,"score":1,"sharp":0.94,"turn":2,"width":1},"reading":1,"schedule":{},"team":false,"tints":{"0,0":"#232b43","0,3":"#232b43","0,4":"#232b43","0,5":"#232b43","0,6":"#233b43","1,0":"#232b43","1,3":"#232b43","2,0":"#232b43","2,2":"#232b43","2,3":"#232b43","3,0":"#232b43","3,1":"#3e3c38","3,2":"#232b43","3,3":"#232b43","3,4":"#232b43","4,0":"#232b43","4,2":"#232b43","4,3":"#232b43","5,0":"#232b43","5,3":"#232b43","6,0":"#232b43","6,3":"#232b43","6,4":"#232b43","6,5":"#232b43","6,6":"#233b43"},"turns":0,"tut":"VII","undead":[{"type":"boneking","x":3,"y":1},{"type":"bonearcher","x":1,"y":0},{"type":"priest","x":5,"y":0}],"updatedAt":1790855638694,"win":"clear","winMusic":"win4"}
 };
 const tutSaved = numeral => Levels.tutOf(numeral) || TUT_BAKED[numeral] || null;
 function missionDef(i){
   const base = E.MISSIONS[i];
+  if(!base) return base;
   const over = base && tutSaved(base.numeral);
-  if(!base || !over) return base;
-  const def = levelDef(over);
+  const def = over ? levelDef(over) : {...base};
   def.numeral = base.numeral;
+  def.tut = base.numeral;
   return def;
 }
 /* the same field, opened for editing: the saved painting if there is one, with
@@ -11343,7 +11345,7 @@ const App = (() => {
     III:"Archers shoot the length of a row. Trees make good friends.",
     IV:"The dead came to burn the towns. Disappoint them.",
     V:"Walls stop arrows. Lava stops everything.",
-    VI:"A witch's hex, and a Chaplain to break it.",
+    VI:"A Witch's hex, a Mantlet in the way, and a Chaplain to break it.",
     VII:"Too heavy to shove, too big to ignore. The last lesson."
   };
   function renderTutorial(){
