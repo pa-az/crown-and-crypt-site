@@ -596,7 +596,6 @@ h1{
 /* a road field's own emblem (pass 39), 56 px on a phone */
 .bi.fe{width:56px;height:56px;border-radius:6px;background:center/cover no-repeat;box-shadow:0 0 0 1px rgba(0,0,0,.6),0 1px 3px rgba(0,0,0,.5)}
 .bi.em{position:relative;overflow:hidden}
-.bi.em > video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;pointer-events:none}
 
 .tile::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;transition:background .13s,box-shadow .13s}
 .tile.mv::after{background:radial-gradient(circle at 50% 50%, rgba(138,186,242,.9) 0 2.5px, transparent 3.2px),rgba(62,121,196,.17);box-shadow:inset 0 0 0 1px rgba(96,152,222,.6)}
@@ -1457,7 +1456,7 @@ h1{
    reach (the owner's word, 2026-09-28: the top left corner is the one place
    a thumb cannot get to). The computer's layout keeps it in the corner */
 @media not all and (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
-  .screen:not(#screen-menu){padding-bottom:calc(28px + 70px)}
+  .screen{padding-bottom:calc(28px + 70px)}
   .screen > .scr-head{position:fixed;left:0;right:0;bottom:0;z-index:20;justify-content:center;min-height:0;
     padding:12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
     background:linear-gradient(to top, rgba(7,10,13,.97) 62%, rgba(7,10,13,0))}
@@ -1465,6 +1464,25 @@ h1{
     font-size:13px;letter-spacing:.14em;color:var(--bone);border-radius:4px;
     border:1px solid rgba(228,218,194,.28);background:rgba(22,34,43,.94)}
   .screen > .scr-head .back svg{width:14px;height:14px}
+  /* the menu has no way back to make room for, and must not scroll (the
+     owner's word, 2026-09-28): its foot is its own, and the crest gives up
+     a little height on a shorter phone */
+  #screen-menu{padding-bottom:20px}
+  #screen-menu .crest-art{width:min(62vw,240px,calc(var(--screen) * .29))}
+  #screen-menu .menu-skull{--sk:min(54vw,220px,calc(var(--screen) * .26))}
+  #screen-menu .menu{margin-top:10px}
+}
+/* a short phone (an iPhone SE): the crest, the gaps and the entries closer */
+@media not all and (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
+  @media (max-height: 700px){
+    #screen-menu{gap:10px;padding-top:10px}
+    #screen-menu .menu-top{gap:8px;padding-top:0}
+    #screen-menu .crest-art{width:min(62vw,calc(var(--screen) * .25))}
+    #screen-menu .menu-skull{--sk:min(54vw,calc(var(--screen) * .23))}
+    #screen-menu .menu{gap:6px;margin-top:6px}
+    #screen-menu .entry{padding-block:10px}
+    #screen-menu .menu-ver{padding-top:8px}
+  }
 }
 
 /* the menu's painting, its mist and the inner screens' paintings reach the
@@ -1483,7 +1501,7 @@ html,body{overflow-x:hidden}
   overflow:visible;pointer-events:none;filter:drop-shadow(0 8px 12px rgba(0,0,0,.7))}
 .crest .tiles{filter:brightness(.72) saturate(.85)}
 /* the painted crest: its dark ground is faded out at the edges into the page */
-.crest-art{display:block;width:min(62vw,245px);aspect-ratio:1;margin-block:0 -24px;pointer-events:none;
+.crest-art{display:block;width:min(62vw,240px);aspect-ratio:1;margin-block:0 -6px;pointer-events:none;
   -webkit-mask:radial-gradient(closest-side,#000 72%,transparent 100%);mask:radial-gradient(closest-side,#000 72%,transparent 100%)}
 #screen-menu{position:relative;isolation:isolate}
 /* mist drifting low across the barrows, two banks at two speeds */
@@ -1515,6 +1533,8 @@ html,body{overflow-x:hidden}
   -webkit-mask:linear-gradient(#000 52%,transparent 100%);mask:linear-gradient(#000 52%,transparent 100%)}
 /* over the backdrop the crest's own dark ground drops out, leaving the helm, lance and skull */
 #screen-menu .crest-art{mix-blend-mode:lighten}
+/* the helm and the skull, the menu's crest before the crowned skull, at the foot of Settings */
+.crest-art.set-crest{width:min(40vw,150px);margin:18px auto 0;mix-blend-mode:lighten;flex:none}
 .menu-side,.scr-side{display:none}
 /* the Tutorial and Achievements stand in front of one of the menu's
    figures: the Longbow behind the Tutorial (it stood behind Settings until
@@ -1540,9 +1560,19 @@ html,body{overflow-x:hidden}
   -webkit-mask:linear-gradient(#000 55%,transparent 100%);mask:linear-gradient(#000 55%,transparent 100%)}
 .crest-art[hidden],.board.crest[hidden]{display:none}
 /* the title lockup sits under the painted knight-and-crowned-skeleton crest */
-.menu-title{margin-top:0;line-height:0}
-.menu-title img{display:block;width:min(76vw,245px);height:auto;margin:0 auto;
-  filter:brightness(.72) saturate(.82) drop-shadow(0 3px 8px rgba(0,0,0,.55))}
+.menu-title{margin-top:0;line-height:0;position:relative;z-index:1}
+/* the crowned skull stands over the title, which covers its fading cloak; its
+   eyes flare and dim once in four seconds, as in the owner's loop */
+.menu-skull{--sk:min(54vw,220px);position:relative;width:var(--sk);aspect-ratio:5/7;margin-bottom:calc(var(--sk) * -.5);pointer-events:none}
+.menu-skull[hidden]{display:none}
+.menu-skull img{position:absolute;inset:0;width:100%;height:100%}
+.menu-skull .glow{animation:skulleyes 2s ease-in-out infinite alternate}
+@keyframes skulleyes{from{opacity:1}to{opacity:.08}}
+@media (prefers-reduced-motion: reduce){ .menu-skull .glow{animation:none;opacity:.6} }
+/* the lockup's painting has a quarter of its height empty under the
+   letters: taken back, so the menu sits close under the title */
+.menu-title img{display:block;width:min(76vw,300px);height:auto;margin:0 auto calc(min(76vw,300px) * -.15);
+  filter:drop-shadow(0 3px 8px rgba(0,0,0,.55))}
 .menu{display:flex;flex-direction:column;gap:8px;margin-top:14px}
 .entry[hidden]{display:none}
 /* an achievement won: a banner dropping in at the top, over everything */
@@ -1560,29 +1590,6 @@ html,body{overflow-x:hidden}
 /* the version, small and quiet at the foot of the menu */
 .menu-ver{margin-top:auto;padding-top:14px;text-align:center;font:600 10px/1 var(--ui);letter-spacing:.12em;
   text-transform:uppercase;color:var(--bone-dim);opacity:.55}
-/* Keep every menu option and the version on-screen without scrolling. */
-#screen-menu:not([hidden]){height:var(--screen);min-height:0;overflow:hidden;gap:0;padding:4px 12px 6px}
-#screen-menu .menu-top{flex:none;gap:0;padding-top:0}
-#screen-menu .crest-art{position:relative;z-index:0;width:min(62vw,245px,calc(var(--screen) * .34));margin-bottom:-24px;transform:translateY(20px)}
-#screen-menu .menu-title{position:relative;z-index:1;flex:none;margin:0}
-#screen-menu .menu-title img{width:min(76vw,245px,calc(var(--screen) * .34));transform:translate(-5px,-42px)}
-#screen-menu .menu{flex:none;align-self:center;width:min(100%,370px);gap:12px;margin:14px 0 0;transform:translateY(-24px)}
-#screen-menu .entry{padding:13px 14px}
-#screen-menu .menu-ver{padding-top:4px}
-@media(max-height:700px){
-  #screen-menu{gap:10px;padding-top:10px}
-  #screen-menu .menu-top{gap:8px;padding-top:0}
-  #screen-menu .crest-art{width:min(62vw,calc(var(--screen) * .25))}
-  #screen-menu .menu{gap:10px;margin:6px 0 0}
-  #screen-menu .entry{padding-block:10px}
-  #screen-menu .menu-ver{padding-top:8px}
-}
-@media(max-height:500px){
-  #screen-menu .crest-art{width:min(62vw,245px,calc(var(--screen) * .26))}
-  #screen-menu .menu-title img{width:min(76vw,245px,calc(var(--screen) * .3))}
-  #screen-menu .entry{padding-block:2px}
-  #screen-menu .entry .e-ico{width:24px;height:24px}
-}
 .entry{
   display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:12px;width:100%;text-align:left;
   padding:13px 14px;border:1px solid rgba(228,218,194,.15);border-radius:4px;background:rgba(22,34,43,.5);
@@ -1746,12 +1753,38 @@ html,body{overflow-x:hidden}
 .mrow .msub{font-size:13px;line-height:1.3;color:var(--bone);font-style:italic;margin-top:3px}
 /* a march's fields as a row of diamonds, gold for each one won */
 .mpips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+/* the March screen's map (Version 209): on a phone the map upright, its
+   lands stacked, the fog at the top; each march a section over its land */
+.mmap{position:relative;left:50%;translate:-50% 0;aspect-ratio:1080/1935;height:min(calc(min(100vw, 480px) * 1935 / 1080), max(calc(var(--screen) - 172px), 560px));
+  max-width:calc(100% + 32px);border-radius:8px;overflow:hidden;background:#0c1116 var(--map-tall, none) center/100% 100% no-repeat;
+  box-shadow:0 0 0 1px rgba(228,218,194,.12),0 10px 30px rgba(0,0,0,.5)}
+.msec{position:absolute;left:0;right:0;display:block;padding:0;margin:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.msec::before{content:"";position:absolute;inset:0;pointer-events:none;transition:background .2s}
+.msec.locked::before,.msec.soon::before{background:rgba(8,11,15,.5)}
+.msec.soon{cursor:default}
+.msec.on{box-shadow:inset 0 0 0 2px rgba(217,166,43,.55)}
+.msec:disabled{cursor:default}
+.msec:focus-visible{outline:2px solid var(--gold);outline-offset:-3px}
+.msec.s0{top:72%;height:28%}.msec.s1{top:48%;height:24%}.msec.s2{top:22%;height:26%}.msec.soon{top:0;height:22%}
+.msec .mplate{position:absolute;display:flex;flex-direction:column;max-width:64%;padding:8px 11px 9px;border-radius:9px;
+  background:rgba(10,14,19,.8);border:1px solid rgba(217,166,43,.28)}
+.msec.s0 .mplate,.msec.s1 .mplate{right:10px;bottom:10px}
+.msec.s2 .mplate{left:10px;top:10px}
+.msec.soon .mplate{right:10px;bottom:10px}
+.msec.locked .mplate,.msec.soon .mplate{border-color:rgba(255,255,255,.1)}
+.msec .mt{font:600 clamp(18px,5.4vw,22px)/1.05 var(--display);color:var(--gold)}
+.msec.locked .mt,.msec.soon .mt{color:var(--bone)}
+.msec .msub{font:italic 13px/1.25 var(--body);color:var(--bone);margin-top:3px}
+.msec .md{font:14px/1.3 var(--body);color:var(--bone);margin-top:4px}
+.msec.locked .md{opacity:.75}
+.msec .mpips{margin-top:6px}
+.msec .lockp,.msec .cleared{position:absolute;top:8px;right:10px;margin:0;display:flex;align-items:center;gap:6px}
+.msec .lockp{padding:5px 7px;border-radius:6px;background:rgba(10,14,19,.8)}
+.msec .lock{display:block;width:17px;height:17px;color:var(--bone)}
+.msec .lock svg{display:block;width:100%;height:100%}
 .mpips i{width:8px;height:8px;transform:rotate(45deg);border:1px solid rgba(217,166,43,.5)}
 .mpips i.won{background:var(--gold);border-color:var(--gold);box-shadow:0 0 6px rgba(217,166,43,.5)}
-/* the three marches on a phone, or any screen short of the wide layout: a
-   tall card each, filling the screen (the owner's word, 2026-09-28: three
-   thin rows left most of it empty), the emblem large and its painting a
-   faint wash across the card */
+/* a march's fields on a phone, or any screen short of the wide layout */
 @media not all and (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
   /* a field's row round its 56 px emblem: less padding, the number narrower,
      the name a size up */
@@ -1759,21 +1792,6 @@ html,body{overflow-x:hidden}
   #screen-run .mlist.fields .mrow .mgo{gap:11px}
   #screen-run .mlist.fields .mrow .rn{width:26px;font-size:21px}
   #screen-run .mlist.fields .mrow .mt{font-size:14.5px}
-  #screen-run .mlist.marches{display:flex;flex-direction:column;gap:12px;min-height:calc(var(--screen) - 168px)}
-  #screen-run .marches .mrow{flex:1 1 0;min-height:132px;position:relative;overflow:hidden;padding:0;border-radius:6px}
-  #screen-run .marches .mrow::before{content:"";position:absolute;inset:0;pointer-events:none;
-    background:var(--em, none) 85% center/cover no-repeat;opacity:.3;
-    -webkit-mask:linear-gradient(90deg,transparent 20%,#000 85%);mask:linear-gradient(90deg,transparent 20%,#000 85%)}
-  #screen-run .marches .mrow .mgo{position:relative;height:100%;gap:16px;padding:14px 16px}
-  #screen-run .marches .mrow .rn{display:none}
-  #screen-run .marches .mrow .bi.em{width:clamp(84px,27vw,124px);height:auto;aspect-ratio:1;border-radius:6px;flex:none}
-  #screen-run .marches .mrow .mt{font-family:var(--display);font-size:clamp(23px,7vw,30px);font-weight:600;line-height:1.05;color:var(--gold)}
-  #screen-run .marches .mrow.locked{opacity:.72}
-  #screen-run .marches .mrow.locked .mt{color:var(--bone)}
-  #screen-run .marches .mrow.locked .bi.em{filter:grayscale(.7) brightness(.8)}
-  #screen-run .marches .mrow .md{font-size:15px;line-height:1.3;margin-top:6px}
-  #screen-run .marches .mrow .lockp,#screen-run .marches .mrow .cleared{position:absolute;top:12px;right:14px}
-  #screen-run .marches .mrow .lock{width:19px;height:19px}
 }
 .roster{display:flex;flex-direction:column;gap:9px}
 .rost{display:flex;gap:12px;align-items:center}
@@ -1929,7 +1947,8 @@ html,body{overflow-x:hidden}
    both keep all of it on one screen */
 @media (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
   html,body{overflow-x:hidden}
-  #screen-menu:not([hidden]){max-width:none;justify-content:center;align-items:center;padding:8px 48px 10px}
+  #screen-menu:not([hidden]){max-width:none;height:var(--screen);min-height:0;overflow-y:auto;
+    justify-content:center;align-items:center;gap:clamp(12px,3vh,34px);padding:2vh 48px 4vh}
   #screen-menu::before,.menu-fog{height:100%}
   /* a Longbow on the left and the Bone King on the right, back to back
      either side of the crest (2026-09-29, the owner's ask, ART-LOG pass 29): only
@@ -1948,9 +1967,10 @@ html,body{overflow-x:hidden}
   #screen-menu::before{filter:brightness(.72) saturate(.9);
     -webkit-mask:linear-gradient(#000 64%,transparent 100%);mask:linear-gradient(#000 64%,transparent 100%)}
   #screen-menu .menu-top{padding-top:0;gap:0}
-  #screen-menu .crest-art{width:min(245px,calc(var(--screen) * .34));margin-bottom:-24px;transform:translateY(20px)}
-  #screen-menu .menu-title img{width:min(245px,calc(var(--screen) * .34));transform:translate(-5px,-42px)}
-  #screen-menu .menu{margin-top:0;width:clamp(300px,24vw,370px);gap:12px}
+  #screen-menu .crest-art{width:clamp(150px,33vh,400px);margin-bottom:-1.5vh}
+  #screen-menu .menu-skull{--sk:clamp(140px,30vh,340px)}
+  #screen-menu .menu-title img{width:min(76vw,300px);margin-bottom:calc(min(76vw,300px) * -.15)}
+  #screen-menu .menu{margin-top:0;width:clamp(300px,24vw,370px);gap:9px}
   #screen-menu .entry{padding:clamp(9px,1.5vh,13px) 18px;background:rgba(12,17,22,.66)}
   #screen-menu .entry:hover{background:rgba(217,166,43,.1)}
   #screen-menu .entry.key{background:linear-gradient(180deg,rgba(217,166,43,.2),rgba(217,166,43,.07))}
@@ -1959,8 +1979,8 @@ html,body{overflow-x:hidden}
   #screen-menu .menu-ver{position:absolute;right:22px;bottom:16px;margin:0;padding:0}
 }
 /* the screens behind the menu held wide: a wider page and larger type, the
-   painting across the whole window; the marches side by side as three
-   cards with their emblems large, and a march's fields, the tutorial's
+   painting across the whole window; the March screen's map wide, its
+   four lands side by side, and a march's fields, the tutorial's
    fields and the settings two to a row */
 @media (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
   #screen-run,#screen-tutorial,#screen-settings,#screen-ach{max-width:1040px;padding:76px 48px 56px;gap:18px;justify-content:center}
@@ -1981,17 +2001,14 @@ html,body{overflow-x:hidden}
   #screen-tutorial #go-rules{padding:14px 18px}
   #screen-tutorial #go-rules .e-t{font-size:17px}
   #screen-tutorial #go-rules .e-d{font-size:14.5px}
-  /* the three marches: an emblem to each, large, the name and the tally under it */
-  #screen-run .mlist.marches{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
-  #screen-run .marches .mrow{padding:0}
-  #screen-run .marches .mrow .mgo{flex-direction:column;align-items:center;text-align:center;gap:12px;padding:22px 16px 20px}
-  #screen-run .marches .mrow .rn{display:none}
-  #screen-run .marches .mrow .bi.em{width:min(100%,232px);height:auto;aspect-ratio:1;border-radius:6px}
-  #screen-run .marches .mrow .mt{font-family:var(--display);font-size:25px;font-weight:600;color:var(--gold)}
-  #screen-run .marches .mrow.locked .mt{color:var(--bone)}
-  #screen-run .marches .mrow .md{font-size:14.5px;margin-top:6px}
-  #screen-run .marches .mpips{justify-content:center}
-  #screen-run .marches .mrow .cleared,#screen-run .marches .mrow .lock,#screen-run .marches .mrow .lockp{margin-left:0}
+  /* the map held wide: the four lands side by side, each plate at its foot */
+  #screen-run .mmap{width:min(100%, calc((var(--screen) - 236px) * 1920 / 1036));aspect-ratio:1920/1036;height:auto;margin-top:6px;
+    background-image:var(--map-wide, none)}
+  #screen-run .msec{top:0;bottom:0;height:auto;width:25%}
+  #screen-run .msec.s0{left:0}#screen-run .msec.s1{left:25%}#screen-run .msec.s2{left:50%}#screen-run .msec.soon{left:75%}
+  #screen-run .msec .mplate{left:10px;right:10px;top:auto;bottom:10px;max-width:none}
+  #screen-run .msec .mt{font-size:clamp(19px,1.7vw,24px)}
+  #screen-run .msec.open:hover::before{background:rgba(217,166,43,.07)}
   #screen-settings .setlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:stretch}
   #screen-settings .srow{padding:15px 16px}
   #screen-settings .srow .st{font-size:16px}
@@ -2098,6 +2115,7 @@ html,body{overflow-x:hidden}
       </svg>
     </div>
     <img class="crest-art" id="crest-art" alt="" hidden>
+    <div class="menu-skull" id="menu-skull" hidden><img class="base" alt=""><img class="glow" alt=""></div>
     <h1 class="menu-title" aria-label="Crown &amp; Crypt"><img src="brand/title-lockup.png" alt=""></h1>
   </div>
   <nav class="menu" aria-label="Main menu">
@@ -2147,6 +2165,7 @@ html,body{overflow-x:hidden}
   <div class="scr-head"><button class="ghost back" data-go="menu"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Menu</button></div>
   <h2 class="scr-title">Settings</h2>
   <div class="setlist" id="set-list"></div>
+  <img class="crest-art set-crest" id="set-crest" alt="" hidden>
 </section>
 
 <section class="screen" id="screen-ach" hidden>
@@ -2397,7 +2416,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 207;
+const VERSION = "1.0", BUILD = 210;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -4975,17 +4994,12 @@ const MENU_ICONS = {
 /* an emblem for each march on the road screen, in MARCHES order: a banner
    over the barrows at dusk (repainted 2026-09-27 to sit as dark as the other
    two), a road through a dark wood, a crowned skull over fire */
-/* each march's emblem moving (pass 37, take 2 of each, Veo): the banner in
-   the wind, the light at the end of the road, the fire round the skull. Veo
-   drifted from the first frame it was pinned to end on, so each clip's last
-   second is crossfaded into its first (the Long March's last second and a
-   half) and it loops without a jump (Version 199); the still emblem
-   stays under it, and is all a locked march or a still screen shows */
-const MARCH_LOOPS = [
-  "../assets/video/MARCH_LOOPS_eb50731813.mp4",
-  "../assets/video/MARCH_LOOPS_463f46cbc4.mp4",
-  "../assets/video/MARCH_LOOPS_916c07a44a.mp4"
-];
+/* the March screen is one painted map (pass 51, Version 209, the owner's
+   picks): upright on a phone, the road climbing from the First March at the
+   foot through the Long and the Last to the fog at the top, coming soon;
+   held wide, the four lands side by side. It took the place of the marches'
+   emblem loops */
+const MARCH_MAP = {tall:"../assets/img/MARCH_MAP_1ef9826c14.webp", wide:"../assets/img/MARCH_MAP_wide_eddc.webp"};
 /* each road field's own emblem in its march's list (pass 39), by the field's
    name on the road (MARCH's level), 168 px for a 56 px swatch at 3x. A field
    without one shows its biome's picture */
@@ -5093,6 +5107,9 @@ const BANNER_ART = {
   lost:"../assets/img/BANNER_ART_lost_f0b7.webp"
 };
 const CREST_ART = "../assets/img/CREST_ART_193d119f61.webp";
+/* the menu's crowned skull over the title (pass 50): the skull with its eyes dim,
+   and its eyes lit on a layer of their own that breathes in and out */
+const MENU_SKULL = {base:"../assets/img/MENU_SKULL_16146f4c8b.webp", glow:"../assets/img/MENU_SKULL_glow_12ae.webp"};
 const TILE_ART = {  tree_d5:"../assets/img/TILE_ART_tree_d5_08f0.webp",  tree_d4:"../assets/img/TILE_ART_tree_d4_4940.webp",  tree_d3:"../assets/img/TILE_ART_tree_d3_c0c0.webp",  debris:"../assets/img/TILE_ART_debris_8ccb.webp",  broken:"../assets/img/TILE_ART_broken_f039.webp",  stump:"../assets/img/TILE_ART_stump_8001.webp",  grave_N:"../assets/img/TILE_ART_grave_N_37d3.webp",  grave_M:"../assets/img/TILE_ART_grave_M_14de.webp",  grave_J:"../assets/img/TILE_ART_grave_J_b509.webp",  grave_I:"../assets/img/TILE_ART_grave_I_d9d5.webp",  tree_p2:"../assets/img/TILE_ART_tree_p2_e949.webp",
   tree_d2:"../assets/img/TILE_ART_tree_d2_4810.webp",tree_y2:"../assets/img/TILE_ART_tree_y2_bc2b.webp",  tree_t2:"../assets/img/TILE_ART_tree_t2_7f8a.webp",  town_A_burn:"../assets/img/TILE_ART_town_A_burn_1933.webp",  town_A:"../assets/img/TILE_ART_town_A_3a53.webp",  town_V_burn:"../assets/img/TILE_ART_town_V_burn_7e2b.webp",  town_V:"../assets/img/TILE_ART_town_V_66fd.webp",  town_K_burn:"../assets/img/TILE_ART_town_K_burn_e78f.webp",  town_K:"../assets/img/TILE_ART_town_K_ae9a.webp",  town_H_burn:"../assets/img/TILE_ART_town_H_burn_1d83.webp",  town_H:"../assets/img/TILE_ART_town_H_4ada.webp",  rubble:"../assets/img/TILE_ART_rubble_9407.webp",  town_ruin:"../assets/img/TILE_ART_town_ruin_b48f.webp",  grave:"../assets/img/TILE_ART_grave_fd28.webp",
 tree_y:"../assets/img/TILE_ART_tree_y_d936.webp",  tree_d:"../assets/img/TILE_ART_tree_d_c530.webp",tree_p:"../assets/img/TILE_ART_tree_p_39e4.webp",  tree_t:"../assets/img/TILE_ART_tree_t_2c93.webp",
@@ -11022,46 +11039,36 @@ const App = (() => {
     /* the road's stars stand on the title's line */
     el("run-stars").innerHTML = '<b>' + starsOn(road) + '</b>of ' + road.length * 3 + ' <span class="st">&#9733;</span>';
     el("run-stars").setAttribute("aria-label", starsOn(road) + " of " + road.length * 3 + " stars on the road");
-    const rows = document.createElement("div");
-    rows.className = "mlist marches";
+    /* one painted map, a section to each march and the fog past the last:
+       the march's name, its line, its tally and pips on a plate over its land */
+    const map = document.createElement("div");
+    map.className = "mmap";
     all.forEach((m, i) => {
       const done = m.fields.length > 0 && m.won === m.fields.length;
-      const row = document.createElement("div");
+      const row = document.createElement("button");
       /* a march not bought yet: its lock carries the price, and a tap offers it */
       const buy = !m.paid;
-      row.className = "mrow" + (m.open && !done && m.fields.length ? " on" : "") + (m.open ? "" : " locked") + (buy ? " buy" : "");
-      row.dataset.biome = m.fields.length ? (m.fields[0].def.biome || "hall") : "hall";
-      row.innerHTML = '<button class="mgo"' + (m.open && m.fields.length || buy ? "" : ' disabled aria-label="Locked"') + '>' +
-        '<span class="rn">' + (i + 1) + '</span><span class="bi"></span>' +
-        '<span><span class="mt"></span><div class="msub"></div><div class="md"></div>' +
+      row.className = "msec s" + i + (m.open && !done && m.fields.length ? " on" : "") + (m.open ? " open" : " locked") + (buy ? " buy" : "");
+      if(!(m.open && m.fields.length || buy)){ row.disabled = true; row.setAttribute("aria-label", m.name + ", locked"); }
+      row.innerHTML = '<span class="mplate"><span class="mt"></span><span class="msub"></span><span class="md"></span>' +
         (m.fields.length ? '<span class="mpips">' + m.fields.map(f => '<i' + (March.isWon(f.key) ? ' class="won"' : '') + '></i>').join("") + '</span>' : '') +
         '</span>' +
         (done ? '<span class="cleared">Won</span>' : m.open ? "" : '<span class="lockp"><span class="lock">' + LOCK + '</span>' +
-          (buy && Unlock.price() ? '<span class="price"></span>' : '') + '</span>') + '</button>';
+          (buy && Unlock.price() ? '<span class="price"></span>' : '') + '</span>');
       if(row.querySelector(".price")) row.querySelector(".price").textContent = Unlock.price();
       row.querySelector(".mt").textContent = m.name;
       row.querySelector(".msub").textContent = MARCH_SUBS[i] || "";
-      if(MARCH_EMBLEMS[i]){
-        const bi = row.querySelector(".bi");
-        bi.classList.add("em");
-        bi.style.backgroundImage = "url(" + MARCH_EMBLEMS[i] + ")";
-        row.style.setProperty("--em", "url(" + MARCH_EMBLEMS[i] + ")");
-        /* a locked march keeps its still everywhere: greyed with a filter, a
-           playing video repaints every frame on a phone, and held wide three
-           videos at once held the March screen to 30 frames a second even on
-           the Mac (the website's demo lagged on a Windows computer, Version
-           202), so only an open march's emblem moves */
-        if(!still() && m.open) emblemLoop(bi, i);
-      }
       row.querySelector(".md").textContent = buy && m.earned ? "Ready when you are"
         : !m.open ? "Win " + all[i-1].name + " to open it"
         : !m.fields.length ? "No fields on it yet"
         : m.won + " of " + m.fields.length + " won" + (m.won ? ", " + starsOn(m.fields) + " of " + m.fields.length * 3 + " stars" : "");
-      if(buy) row.querySelector(".mgo").onclick = unlockSheet;
-      else if(m.open && m.fields.length) row.querySelector(".mgo").onclick = () => { runMarch = i; renderRun(); };
-      rows.appendChild(row);
+      if(buy) row.onclick = unlockSheet;
+      else if(m.open && m.fields.length) row.onclick = () => { runMarch = i; renderRun(); };
+      map.appendChild(row);
     });
-    box.appendChild(rows);
+    map.insertAdjacentHTML("beforeend", '<div class="msec soon"><span class="mplate"><span class="mt">Coming soon</span>' +
+      '<span class="msub">The road goes on into the fog.</span></span></div>');
+    box.appendChild(map);
   }
 
   function renderMarch(box, road, m){
@@ -11100,26 +11107,6 @@ const App = (() => {
     box.appendChild(rows);
     box.insertAdjacentHTML("beforeend", '<p class="run-note">No wound carries over. On every field the whole squad rides out again.</p>');
   }
-  /* the emblem's loop, from a blob made once: a phone's video player will not
-     stream from a data: address */
-  const loopUrls = [];
-  function emblemLoop(bi, i){
-    if(!MARCH_LOOPS[i]) return;
-    try {
-      if(!loopUrls[i]){
-        const bin = atob(MARCH_LOOPS[i].slice(MARCH_LOOPS[i].indexOf(",") + 1)), a = new Uint8Array(bin.length);
-        for(let k = 0; k < bin.length; k++) a[k] = bin.charCodeAt(k);
-        loopUrls[i] = URL.createObjectURL(new Blob([a], {type:"video/mp4"}));
-      }
-      const v = document.createElement("video");
-      v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true;
-      v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("aria-hidden", "true");
-      v.disablePictureInPicture = true;
-      v.src = loopUrls[i];
-      bi.appendChild(v);
-      const p = v.play(); if(p && p.catch) p.catch(() => {});
-    } catch(e){}
-  }
   /* a field of the road, if it is open to be played */
   function playField(i){
     const list = March.fields(), f = list[i];
@@ -11154,11 +11141,21 @@ const App = (() => {
     if(SCREEN_ART) document.documentElement.style.setProperty("--screen-art", "url(" + SCREEN_ART + ")");
     if(FRAME_ART) document.documentElement.style.setProperty("--frame-art", "url(" + FRAME_ART + ")");
     if(MENU_ART) el("screen-menu").style.setProperty("--menu-art", "url(" + MENU_ART + ")");
+    el("screen-run").style.setProperty("--map-tall", "url(" + MARCH_MAP.tall + ")");
+    el("screen-run").style.setProperty("--map-wide", "url(" + MARCH_MAP.wide + ")");
     el("menu-side-l").src = MENU_SIDES.l; el("menu-side-r").src = MENU_SIDES.r;
     document.querySelectorAll(".scr-side").forEach(i => { i.src = MENU_SIDES[i.classList.contains("l") ? "l" : "r"]; });
+    if(MENU_SKULL){
+      const sk = el("menu-skull");
+      sk.querySelector(".base").src = MENU_SKULL.base;
+      sk.querySelector(".glow").src = MENU_SKULL.glow;
+      sk.hidden = false;
+    }
     if(CREST_ART){
       el("crest-art").src = CREST_ART;
-      el("crest-art").hidden = false;
+      el("crest-art").hidden = !!MENU_SKULL;
+      el("set-crest").src = CREST_ART;
+      el("set-crest").hidden = false;
       el("crest").hidden = true;
       return;
     }
