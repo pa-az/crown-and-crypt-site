@@ -2462,7 +2462,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 213;
+const VERSION = "1.0", BUILD = 214;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -5053,44 +5053,9 @@ const MARCH_FIELD_MAPS = {
   1: {img:"../assets/img/MARCH_FIELD_MAPS_f19b08b19f.webp", places:{"the narrow way":[62,80],"the poisoned heath":[20,69],"the fords":[43,64],"the shieldwall":[29,52],"the burning hall":[75,44],"the twin gates":[26,34],"the cinder causeway":[55,31],"the long barrow":[73,24],"the bone court":[70,12]}},
 };
 const MARCH_MAP = {tall:"../assets/img/MARCH_MAP_1ef9826c14.webp", wide:"../assets/img/MARCH_MAP_wide_eddc.webp"};
-/* each road field's own emblem in its march's list (pass 39), by the field's
-   name on the road (MARCH's level), 168 px for a 56 px swatch at 3x. A field
-   without one shows its biome's picture */
-const FIELD_EMBLEMS = {
-  "the narrow way":"../assets/img/FIELD_EMBLEMS_a44da74e09.webp",
-  "the poisoned heath":"../assets/img/FIELD_EMBLEMS_4aa0890829.webp",
-  "the fords":"../assets/img/FIELD_EMBLEMS_2f9f263ee7.webp",
-  "the shieldwall":"../assets/img/FIELD_EMBLEMS_8247767de7.webp",
-  "the burning hall":"../assets/img/FIELD_EMBLEMS_dcc3a0ae5e.webp",
-  "the hollow crown":"../assets/img/FIELD_EMBLEMS_84b36596cc.webp",
-  "the cinder causeway":"../assets/img/FIELD_EMBLEMS_7dcb0298a7.webp",
-  "the long barrow":"../assets/img/FIELD_EMBLEMS_a697400739.webp",
-  "the bone court":"../assets/img/FIELD_EMBLEMS_a40648d4ce.webp",
-  "the twin gates":"../assets/img/FIELD_EMBLEMS_27e269dd45.webp",
-  "the warded gate":"../assets/img/FIELD_EMBLEMS_df9dfaf3b6.webp",
-  "the witch hollow":"../assets/img/FIELD_EMBLEMS_e47af6f82f.webp",
-  "the wide muster":"../assets/img/FIELD_EMBLEMS_5435e0561e.webp",
-  "the last gate":"../assets/img/FIELD_EMBLEMS_2f59798ea4.webp",
-  "the witchwood":"../assets/img/FIELD_EMBLEMS_d8f07c758b.webp",
-  "the charnel ford":"../assets/img/FIELD_EMBLEMS_92fbf92739.webp",
-  "the unquiet hall":"../assets/img/FIELD_EMBLEMS_5c54cd8837.webp",
-  "the throne of bone":"../assets/img/FIELD_EMBLEMS_83924d2fa3.webp",
-  "the black tarn":"../assets/img/FIELD_EMBLEMS_5fea99f565.webp",
-  "hold the abbey":"../assets/img/FIELD_EMBLEMS_c077779676.webp",
-  "the sunken keep":"../assets/img/FIELD_EMBLEMS_e9f1000e65.webp",
-  "the burning abbey":"../assets/img/FIELD_EMBLEMS_37e75bc822.webp",
-  "the drowned bailey":"../assets/img/FIELD_EMBLEMS_bf3524637d.webp",
-  "the shrouded wood":"../assets/img/FIELD_EMBLEMS_05dc806924.webp",
-  "the gatehouse":"../assets/img/FIELD_EMBLEMS_018ea04526.webp"
-};
 /* a line under each march's name on the March screen, what it brings (the
    owner's word, Version 196: the Last March says the dead plan as one) */
 const MARCH_SUBS = ["The dead stir. Time to meet them.", "Witches join the dead, and hex the ground.", "The dead plan as one. Good luck."];
-const MARCH_EMBLEMS = [
-  "../assets/img/MARCH_EMBLEMS_4fee80b89c.webp",
-  "../assets/img/MARCH_EMBLEMS_c053b37541.webp",
-  "../assets/img/MARCH_EMBLEMS_56180b04db.webp"
-];
 /* the inner screens' backdrop (the road, the tutorial, settings, how to play):
    the same barrow field after dark, a ridge of mounds under a slate sky */
 const SCREEN_ART = "../assets/img/SCREEN_ART_7ddbbed544.webp";
@@ -5106,13 +5071,22 @@ const BIOME_ART = {
 /* the looks made of one painted ground, and the look each takes its colours
    and its list picture from */
 const LOOK_BASE = {grass:"heath", mud:"road", paved:"hall", peat:"marsh", cinders:"road", frost:"hall", meadow:"marsh", blight:"heath", heathgravel:"heath", sand:"road", witchwood:"barrow", moss:"heath"};
-/* the tutorial fields that share a look with another take a picture of
-   their own from the road's art (the owner, Version 201: The Hex and The
-   Bone King both showed the hall): the Witch Hollow's hat and the Last
-   March's crowned skull */
-const TUT_EMBLEMS = {VI:() => FIELD_EMBLEMS["the witch hollow"], VII:() => MARCH_EMBLEMS[2]};
+/* each tutorial field's picture, from the emblems the road's fields and
+   marches had before their maps (passes 37 and 39; the owner, Version 214:
+   the rest went): I the hand from the grave, II the black tarn, III the
+   misted pines, IV the burning hall, V the causeway over lava, VI the
+   witch's hat, VII the crowned skull in fire */
+const TUT_EMBLEMS = {
+  I:"../assets/img/TUT_EMBLEMS_I_5c54.webp",
+  II:"../assets/img/TUT_EMBLEMS_II_5fea.webp",
+  III:"../assets/img/TUT_EMBLEMS_III_05dc.webp",
+  IV:"../assets/img/TUT_EMBLEMS_IV_dcc3.webp",
+  V:"../assets/img/TUT_EMBLEMS_V_7dcb.webp",
+  VI:"../assets/img/TUT_EMBLEMS_VI_e47a.webp",
+  VII:"../assets/img/TUT_EMBLEMS_VII_5618.webp"
+};
 function tutSwatch(row, numeral){
-  const pic = TUT_EMBLEMS[numeral] && TUT_EMBLEMS[numeral](), bi = row.querySelector(".bi");
+  const pic = TUT_EMBLEMS[numeral], bi = row.querySelector(".bi");
   if(!pic || !bi) return biomeSwatch(row);
   bi.classList.add("vg");
   bi.style.backgroundImage = "url(" + pic + ")";
@@ -11202,13 +11176,7 @@ const App = (() => {
         '<span class="rn">' + (i + 1) + '</span><span class="bi"></span><span><span class="mt"></span><div class="md"></div></span>' +
         (done ? starRow(Stars.get(f.key) || 1) : open ? "" : '<span class="lock">' + LOCK + '</span>') + '</button>';
       row.querySelector(".mt").textContent = f.def.name;
-      const emblem = FIELD_EMBLEMS[(f.key || "").toLowerCase()];
-      if(emblem){
-        const bi = row.querySelector(".bi");
-        bi.classList.add("fe");
-        bi.style.backgroundImage = "url(" + emblem + ")";
-      }
-      else biomeSwatch(row);
+      biomeSwatch(row);
       /* only a field that is won by lasting says so: clearing is the rule */
       row.querySelector(".md").textContent = f.def.win === "survive" ? "Hold out for " + f.def.turns + " turns" : "";
       if(open) row.querySelector(".mgo").onclick = () => playField(at);
@@ -11571,12 +11539,7 @@ const App = (() => {
       '</div>' + (canDelete ? '<button class="ldel" aria-label="Delete">' + TRASH + '</button>' : "");
     el.querySelector(".mt").textContent = l.name || "Untitled field";
     el.title = (l.name || "Untitled field") + (when ? ", " + when.charAt(0).toLowerCase() + when.slice(1) : "");
-    const emblem = road && FIELD_EMBLEMS[(road.key || "").toLowerCase()];
-    if(emblem){
-      const bi = el.querySelector(".bi");
-      bi.classList.add("fe");
-      bi.style.backgroundImage = "url(" + emblem + ")";
-    } else if(numeral !== undefined) tutSwatch(el, numeral);
+    if(numeral !== undefined) tutSwatch(el, numeral);
     else biomeSwatch(el);
     const open = () => {
       /* tutDraft, not missionDef: the draft has to carry the numeral that ties
@@ -11611,12 +11574,14 @@ const App = (() => {
 
   /* ---------- wiring ---------- */
   /* the menus' own quiet sounds: a tap for a menu choice, a road or tutorial
-     row and a back arrow, a page turned when How to play opens */
+     row, a march on the March screen's map, a field's pin on a march's map
+     (Version 214: the maps had none) and a back arrow, a page turned when
+     How to play opens */
   document.addEventListener("click", e => {
     const b = e.target.closest && e.target.closest("button");
     if(!b || b.disabled) return;
     if(b.matches("#go-rules, #btn-rules")) Sfx.play("page");
-    else if(b.matches("#screen-menu .entry, .mlist .mgo, .back, #btn-back")) Sfx.play("tap");
+    else if(b.matches("#screen-menu .entry, .mlist .mgo, .msec, .fpin, .back, #btn-back")) Sfx.play("tap");
   }, true);
   el("go-run").onclick = () => show("run");
   el("go-tutorial").onclick = () => show("tutorial");
