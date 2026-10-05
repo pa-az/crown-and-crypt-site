@@ -1549,7 +1549,7 @@ html,body{overflow-x:hidden}
     #screen-settings .srow.vol{padding-top:4px;padding-bottom:4px}
   }
 }
-.menu-side,.scr-side{display:none}
+.scr-side{display:none}
 /* the Tutorial and Achievements stand in front of one of the menu's
    figures: the Longbow behind the Tutorial (it stood behind Settings until
    Version 181), the Bone King behind Achievements (the owner's word), dimmed and faded at both ends; held wide, both
@@ -2059,16 +2059,6 @@ html,body{overflow-x:hidden}
      either side of the crest (2026-09-29, the owner's ask, ART-LOG pass 29): only
      held wide, sized so they never reach the column of ways in, their feet
      in the mist that drifts in front of them */
-  /* three in a row, evenly: the menu in the middle and each figure in the
-     middle of the room beside it (--half is half the column of ways in, the
-     `.menu` width below), as tall as that room allows (the canvas is .56 as
-     wide as it is tall) with a margin either side */
-  #screen-menu{--half:calc(clamp(300px,24vw,370px) / 2)}
-  .menu-side{display:block;position:absolute;bottom:0;z-index:-1;pointer-events:none;width:auto;
-    height:min(88%, calc((50vw - var(--half) - 6vw) / .56));filter:brightness(.86);
-    -webkit-mask:linear-gradient(#000 78%,transparent 100%);mask:linear-gradient(#000 78%,transparent 100%)}
-  .menu-side.l{left:calc((50% - var(--half)) / 2);translate:-50% 0}
-  .menu-side.r{right:calc((50% - var(--half)) / 2);translate:50% 0}
   /* the keep and the tarn, faded as the website has it (brightness .62) */
   #screen-menu::before{background-position:center 30%;filter:brightness(.62) saturate(.9);
     -webkit-mask:linear-gradient(#000 70%,transparent 100%);mask:linear-gradient(#000 70%,transparent 100%)}
@@ -2077,19 +2067,17 @@ html,body{overflow-x:hidden}
   #screen-menu .crest-art{width:clamp(150px,33vh,400px);margin-bottom:-1.5vh}
   #screen-menu .menu-skull{--sk:clamp(140px,30vh,340px)}
   #screen-menu .menu-title img{width:min(76vw,300px);margin-bottom:calc(min(76vw,300px) * -.15)}
-  #screen-menu .menu{margin-top:0;width:clamp(300px,24vw,370px);gap:9px}
-  /* the website's teaser (DEMO, no figures beside it, Version 224): the
-     buttons larger, the plate's ends kept to its shape (.714 of its
-     height), and the skull fainter over the site's painting */
-  .demo #screen-menu .menu{width:clamp(380px,30vw,470px);gap:11px}
-  .demo #screen-menu .entry{--eh:clamp(60px,8vh,72px);height:var(--eh);border-width:0 calc(var(--eh) * .714);
+  /* the website teaser's look in every copy since Version 227 (the owner's
+     word; it was the teaser's alone, DEMO, from 224): no figures beside it,
+     the buttons larger, the plate's ends kept to its shape (.714 of its
+     height), and the skull fainter over the painting */
+  #screen-menu .menu{margin-top:0;width:clamp(380px,30vw,470px);gap:11px}
+  #screen-menu .entry{--eh:clamp(60px,8vh,72px);height:var(--eh);border-width:0 calc(var(--eh) * .714);
     border-image-width:0 calc(var(--eh) * .714);grid-template-columns:calc(var(--eh) * .66) 1fr auto;gap:10px}
-  .demo #screen-menu .entry .e-ico{width:calc(var(--eh) * .66);height:calc(var(--eh) * .66)}
-  .demo #screen-menu .entry .e-t{font-size:19px}
-  .demo #screen-menu .entry .e-meta{font-size:12.5px}
-  .demo #screen-menu .menu-skull{opacity:.62}
-  #screen-menu .entry .e-t{font-size:17px}
-  #screen-menu .entry .e-meta{font-size:11.5px}
+  #screen-menu .entry .e-ico{width:calc(var(--eh) * .66);height:calc(var(--eh) * .66)}
+  #screen-menu .entry .e-t{font-size:19px}
+  #screen-menu .entry .e-meta{font-size:12.5px}
+  #screen-menu .menu-skull{opacity:.62}
   #screen-menu .menu-ver{position:absolute;right:22px;bottom:16px;margin:0;padding:0}
 }
 /* the screens behind the menu held wide: a wider page and larger type, the
@@ -2184,7 +2172,6 @@ html,body{overflow-x:hidden}
 </svg>
 
 <main class="screen" id="screen-menu">
-  <img class="menu-side l" id="menu-side-l" alt="" aria-hidden="true"><img class="menu-side r" id="menu-side-r" alt="" aria-hidden="true">
   <div class="menu-paint" aria-hidden="true"><div class="pic"><i class="eye l"></i><i class="eye r"></i></div></div>
   <div class="menu-fog" aria-hidden="true"><i></i><i></i></div>
   <div class="menu-top">
@@ -2460,6 +2447,9 @@ html,body{overflow-x:hidden}
       <div class="ed-f"><label for="ed-par">Par, for the third star</label>
         <div class="ed-inline"><select id="ed-par"><option value="0">none</option></select><button class="btn slim" id="ed-par-find">Find</button></div>
       </div>
+      <div class="ed-f"><label for="ed-fast">Second star, where no win keeps every knight</label>
+        <select id="ed-fast"><option value="0">every knight standing</option></select>
+      </div>
       <div class="ed-f"><label>Hints</label>
         <div class="ed-segs" data-for="ed-hints"><button data-v="0">From the march</button><button data-v="1">Free here</button></div>
         <select id="ed-hints" hidden><option value="0">From the march's three</option><option value="1">Free on this field</option></select>
@@ -2520,7 +2510,7 @@ html,body{overflow-x:hidden}
          2026-09-30: "1, 2, 3" read as steps, and par was never explained) -->
     <div class="htp-stars">
       <div><b></b><span>Win the field</span></div>
-      <div><b></b><span>Every knight still standing</span></div>
+      <div><b></b><span>Every knight still standing, or on a few fields win by an earlier turn</span></div>
       <div><b></b><span>Win fast, or on a Hold field keep every town</span></div>
     </div>
     <p class="htp-win">Each star counts on its own. Fast means by the field's par turn: miss it and the win tells you the turn to beat.</p>
@@ -2539,7 +2529,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 226;
+const VERSION = "1.0", BUILD = 227;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -4304,6 +4294,9 @@ const Engine = (() => {
     let pick = null, pickScore = Infinity;
     for(const k of spots){
       const [x,y] = k.split(",").map(Number);
+      /* a priest never stands on a mark, its own or another's: it would
+         choke the rise it is there to bring (Version 227, the owner's word) */
+      if(kind==="rite" && (x!==ox || y!==oy) && s.markers.some(m => m.x===x && m.y===y)) continue;
       let sc;
       if(kind==="shield"){
         sc = shieldScore(s,u,x,y) + fieldAt(gf,x,y)*0.6 + waterRisk(s,u,x,y)*0.06
@@ -4748,6 +4741,12 @@ const Engine = (() => {
     if(s.hinted && !s.def.tut) return {n:1, hinted:true, all:false, third:false, thirdWhy:""};
     const standing = s.units.filter(u => u.side === "knight");
     const all = standing.length === s.roster.length;
+    /* where no win keeps every knight (the search's word, Version 227: The
+       Black Tarn, The Throne of Bone), the second star is a win by the
+       fewest turns found instead (def.fast); `all` stays what it says, for
+       the achievements that ask for it */
+    const second = s.def.fast ? s.turn <= s.def.fast : all;
+    const secondWhy = s.def.fast ? "won by turn " + s.def.fast : "every knight standing";
     let third, thirdWhy;
     if(s.def.win === "survive"){
       third = s.townMax > 0 ? s.town === s.townMax : standing.every(u => u.hp >= u.maxHp);
@@ -4756,7 +4755,7 @@ const Engine = (() => {
       third = !!s.def.par && s.turn <= s.def.par;
       thirdWhy = s.def.par ? "won by turn " + s.def.par : "";
     }
-    return {n:1 + (all ? 1 : 0) + (third ? 1 : 0), all, third, thirdWhy};
+    return {n:1 + (second ? 1 : 0) + (third ? 1 : 0), all, second, secondWhy, third, thirdWhy};
   }
 
   /* ---------- achievements (the owner's list, 2026-09-27) ----------
@@ -7914,10 +7913,10 @@ function renderBar(){
       if(won) for(let i = 0; i < got.n; i++) setTimeout(() => Sfx.play("star" + Math.min(3, i + 1)), 700 + i * 260);
       if(opened && Music.isOn()) setTimeout(() => Sfx.play("fanfare"), 200);   /* a fanfare is music */
     }
-    const why = won && got.hinted ? "Won with a hint, so one star." : won ? ["Won"].concat(got.all ? ["every knight standing"] : [])
+    const why = won && got.hinted ? "Won with a hint, so one star." : won ? ["Won"].concat(got.second ? [got.secondWhy] : [])
       .concat(got.third ? [got.thirdWhy] : []).join(", ") + "." +
       (!got.third && got.thirdWhy ? " Third star: " + got.thirdWhy + "." : "") +
-      (!got.all ? " Second star: every knight standing." : "") : "";
+      (!got.second ? " Second star: " + got.secondWhy + "." : "") : "";
     /* a painted banner behind the title, where there is one */
     const ban = BANNER_ART[won ? "won" : "lost"];
     elInfo.innerHTML = '<div><div class="who' + (ban ? ' ban ' + (won ? "won" : "lost") : '') + '" style="color:' +
@@ -9563,7 +9562,7 @@ const Editor = (() => {
   const fresh = () => ({
     numeral:"?", name:"", win:"clear", turns:0, biome:"hall",
     brief:"", map:blank(), ground:blank(), links:{}, tints:{}, looks:{}, knights:[], undead:[], schedule:{},
-    dead:"sharp", team:false, par:0, hints:0, music:"", winMusic:"", lossMusic:"", line:null, read:null
+    dead:"sharp", team:false, par:0, fast:0, hints:0, music:"", winMusic:"", lossMusic:"", line:null, read:null
   });
   /* a field drawn before there was a ground layer keeps its look: every ground
      character in the map becomes the ground under that tile */
@@ -9997,6 +9996,7 @@ const Editor = (() => {
     el("ed-dead").value = draft.dead || "sharp";
     el("ed-team").checked = !!draft.team;
     el("ed-par").value = String(draft.par || 0);
+    el("ed-fast").value = String(draft.fast || 0);
     el("ed-hints").value = draft.hints ? "1" : "0";
     /* every battle track in the file, the march's own first */
     const ms = el("ed-music");
@@ -10373,7 +10373,7 @@ const Editor = (() => {
       links:def.links || {},
       tints:def.tints || {},
       looks:def.looks || {},
-      dead:def.dead || "sharp", team:!!def.team, par:def.par || 0, hints:def.hints || 0,
+      dead:def.dead || "sharp", team:!!def.team, par:def.par || 0, fast:def.fast || 0, hints:def.hints || 0,
       music:def.music || "", winMusic:def.winMusic || "", lossMusic:def.lossMusic || "",
       reading:def.reading || 0, line:def.line || null, read:def.read || null,
       knights:def.knights.map(k => ({...k, type:E.unitType(k.type, "knight")})),
@@ -10491,11 +10491,13 @@ const Editor = (() => {
   el("ed-lay").onclick = layLook;
   el("ed-turns").onchange = e => { draft.turns = Number(e.target.value); touched(); refresh(); };
   for(let n = 2; n <= 16; n++) el("ed-par").insertAdjacentHTML("beforeend", '<option value="' + n + '">' + n + ' turns</option>');
+  for(let n = 2; n <= 16; n++) el("ed-fast").insertAdjacentHTML("beforeend", '<option value="' + n + '">won by turn ' + n + '</option>');
   /* anything that changes how the dead play changes the reading, so the bar
      is taken again */
   el("ed-dead").onchange = e => { draft.dead = e.target.value; touched(); refresh(); };
   el("ed-team").onchange = e => { draft.team = e.target.checked; touched(); refresh(); };
   el("ed-par").onchange = e => { draft.par = Number(e.target.value); touched(); };
+  el("ed-fast").onchange = e => { draft.fast = Number(e.target.value); touched(); };
   el("ed-hints").onchange = e => { draft.hints = Number(e.target.value); touched(); };
   el("ed-music").onchange = e => { draft.music = e.target.value; touched(); };
   el("ed-winmusic").onchange = e => { draft.winMusic = e.target.value; touched(); };
@@ -10922,7 +10924,7 @@ const levelDef = l => ({numeral:"?", name:l.name, brief:l.brief || "", win:l.win
   /* what the field asks of the dead and of the player, set in the editor:
      how the dead think, whether they plan as one, whether they aim a turn
      ahead, the par for the third star, and hints of its own */
-  dead:l.dead || "sharp", team:!!l.team, par:l.par || 0, hints:l.hints || 0, tut:l.tut || undefined, music:l.music || "",
+  dead:l.dead || "sharp", team:!!l.team, par:l.par || 0, fast:l.fast || 0, hints:l.hints || 0, tut:l.tut || undefined, music:l.music || "",
   winMusic:l.winMusic || "", lossMusic:l.lossMusic || "",
   /* a winning line the editor's reading found, which the hints follow */
   line:l.line || null});
@@ -10940,7 +10942,7 @@ const TUT_BAKED = {
   "IV":{"biome":"barrow","brief":"Towns [hits 2] catch fire at the first hit and burn down at the second. Lose every town and you lose the field. The Catapult throws over anything, but its stone hurts towns too. The villagers would like a word.","dead":"sharp","ground":["h......","hh.....","hrhhnnn","chhhhhh","cchhhhh","c.hhhhh","cchhhhh"],"hints":0,"id":"lvmujz3plv9xnpx","knights":[{"type":"lancer","x":3,"y":4},{"type":"crossbow","x":2,"y":6},{"type":"catapult","x":4,"y":6}],"line":[[{"aim":"N","from":[3,4],"to":[3,1]},{"from":[2,6],"to":[2,5]},{"aim":[4,0],"from":[4,6],"to":[4,4]}],[{"aim":"E","from":[3,2],"to":[5,3]},{"aim":"N","from":[2,5],"to":[3,3]},{"aim":[3,1],"from":[4,4],"to":[3,4]}]],"links":{},"looks":{},"lossMusic":"loss4","map":[".......","..T.T..",".B...B.",".......",".......",".H...V.","......."],"music":"","name":"The Burning Towns","numeral":"IV","par":3,"read":{"band":"A stroll","bots":{"played":20,"raw":0.67,"stuck":0,"wins":20},"first":0,"found":true,"margin":85,"of":"1we8ewe","raw":0.6923076923076918,"score":1,"sharp":0.77,"turn":2,"width":1},"reading":1,"schedule":{},"team":false,"tints":{"0,3":"#433323","0,4":"#433323","0,5":"#433323","0,6":"#433323","2,0":"#433323","2,1":"#433b23","2,2":"#433323","3,1":"#433323","4,0":"#433323","4,1":"#433323","4,2":"#433323","5,1":"#433323","5,3":"#433323","6,2":"#433323","6,3":"#433323"},"turns":0,"tut":"IV","undead":[{"type":"ghoul","x":1,"y":0},{"type":"ghoul","x":5,"y":0},{"type":"bonearcher","x":3,"y":0}],"updatedAt":1790855630268,"win":"clear","winMusic":"win4"},
   "V":{"biome":"marsh","brief":"Walls [hits 3] stop arrows. Lava finishes anything shoved into it, like water. Your Trebuchet throws [dmg 2] over walls on the diagonal. Mind your step.","dead":"sharp","ground":["ccccccc","ccccccc","cc.c...",".c.ccc.",".ccccc.",".ccccc.","......."],"hints":0,"id":"lvmujz85lnue345","knights":[{"type":"lancer","x":3,"y":5},{"type":"crossbow","x":1,"y":5},{"type":"trebuchet","x":5,"y":5}],"line":[[{"aim":[1,1],"from":[5,5],"to":[4,4]},{"from":[3,5],"to":[3,5]},{"from":[1,5],"to":[1,5]}],[{"aim":[2,3],"from":[4,4],"to":[4,5]},{"aim":"E","from":[1,5],"to":[2,3]},{"aim":"N","from":[3,5],"to":[3,2]}]],"links":{},"looks":{},"lossMusic":"loss4","map":[".......",".......","SSS.SSS","S.L.L.S","S.....S","S.....S","SSSSSSS"],"music":"","name":"Stone and Fire","numeral":"V","par":3,"read":{"band":"A stroll","bots":{"played":20,"raw":0,"stuck":0,"wins":20},"first":0,"found":true,"margin":100,"of":"lw9t2w","raw":0,"score":0,"sharp":0,"turn":2,"width":1},"reading":0,"schedule":{},"team":false,"tints":{"0,2":"#3e3c38","0,3":"#3e3c38","0,4":"#3e3c38","0,5":"#3e3c38","0,6":"#3e3c38","1,2":"#3e3c38","1,3":"#3e3c38","1,4":"#3e3c38","1,5":"#3e3c38","1,6":"#3e3c38","2,2":"#3e3c38","2,3":"#3e3c38","2,4":"#3e3c38","2,5":"#3e3c38","2,6":"#3e3c38","3,5":"#3e3c38","3,6":"#3e3c38","4,2":"#3e3c38","4,3":"#3e3c38","4,4":"#3e3c38","4,5":"#3e3c38","4,6":"#3e3c38","5,2":"#3e3c38","5,3":"#3e3c38","5,4":"#3e3c38","5,5":"#3e3c38","5,6":"#3e3c38","6,2":"#3e3c38","6,3":"#3e3c38","6,4":"#3e3c38","6,5":"#3e3c38","6,6":"#3e3c38"},"turns":0,"tut":"V","undead":[{"type":"ghoul","x":3,"y":0},{"type":"bonearcher","x":1,"y":1},{"type":"slinger","x":5,"y":1}],"updatedAt":1790855626258,"win":"clear","winMusic":"win4"},
   "VI":{"biome":"hall","brief":"The Barrow Witch hexes a tile within [reach 3 dead] each turn. Start a turn on a hex and you walk [move 2]; end one on it and you lose your next turn. A Mantlet shields her from arrows. The lance can shove it aside. The Chaplain blesses a tile within [reach 2], breaking the hex and freeing whoever it holds. Witches hate that.","dead":"sharp","ground":["rr.r.rr","rreeerr","re...er","e.....e",".......",".......","......."],"hints":0,"id":"lvmujzdi5gdgw5d","knights":[{"type":"lancer","x":2,"y":5},{"type":"crossbow","x":4,"y":5},{"type":"chaplain","x":3,"y":6}],"line":[[{"aim":"N","from":[4,5],"to":[3,4]},{"from":[2,5],"to":[2,5]},{"from":[3,6],"to":[4,6]}],[{"aim":"E","from":[3,4],"to":[1,3]},{"aim":"N","from":[2,5],"to":[1,5]},{"from":[4,6],"to":[2,6]}],[{"aim":"S","from":[1,5],"to":[4,5]},{"aim":[1,3],"from":[2,6],"to":[2,5]},{"aim":"N","from":[1,3],"to":[3,2]}]],"links":{},"looks":{},"lossMusic":"loss4","map":["..G.G..",".......","P.....P",".......",".......","S.....S","S.....S"],"music":"","name":"The Hex","numeral":"VI","par":4,"read":{"band":"A stroll","bots":{"played":20,"raw":0.62,"stuck":0,"wins":20},"first":0,"found":true,"margin":100,"of":"1pym797","raw":0.46125000000000016,"score":0,"sharp":0,"turn":3,"width":1},"reading":0,"schedule":{},"team":false,"tints":{"0,0":"#382343","0,5":"#232b43","1,1":"#382343","1,6":"#232b43","2,5":"#233b43","3,0":"#382343","3,6":"#233b43","4,5":"#233b43","5,1":"#382343","5,6":"#232b43","6,0":"#382343","6,5":"#232b43"},"turns":0,"tut":"VI","undead":[{"type":"witch","x":3,"y":0},{"type":"mantlet","x":3,"y":1},{"type":"ghoul","x":1,"y":1},{"type":"ghoul","x":5,"y":1}],"updatedAt":1791002402537,"win":"clear","winMusic":"win4"},
-  "VII":{"biome":"hall","brief":"The Bone King [health 5 dead] cannot be shoved or dragged, and its cold hits all four sides at once for [dmg 2 dead]. Keep your knights apart, keep the towns standing, and cut it down. He wears the crown for a reason.","dead":"sharp","ground":["ccccccc","...c...","...c...","ccccccc","c..c..c","c.....c","......."],"hints":0,"id":"lvmujzm7jp3icol","knights":[{"type":"lancer","x":3,"y":5},{"type":"billhook","x":1,"y":5},{"type":"catapult","x":5,"y":5},{"type":"crossbow","x":3,"y":6}],"line":[[{"aim":[5,0],"from":[5,5],"to":[5,4]},{"aim":"N","from":[1,5],"to":[1,3]},{"aim":"N","from":[3,5],"to":[3,2]},{"from":[3,6],"to":[3,6]}],[{"aim":[3,1],"from":[5,4],"to":[3,4]},{"aim":"N","from":[1,3],"to":[0,3]},{"from":[3,6],"to":[3,6]},{"aim":"N","from":[3,3],"to":[3,2]}]],"links":{},"lossMusic":"loss2","map":[".......",".......","..L.L..",".......",".......",".......","H.....A"],"music":"","name":"The Bone King","numeral":"VII","par":3,"read":{"band":"A stroll","bots":{"played":20,"raw":0.5,"stuck":0,"wins":20},"first":0,"found":true,"margin":81,"of":"mdcay4","raw":0.6093750000000027,"score":1,"sharp":0.94,"turn":2,"width":1},"reading":1,"schedule":{},"team":false,"tints":{"0,0":"#232b43","0,3":"#232b43","0,4":"#232b43","0,5":"#232b43","0,6":"#233b43","1,0":"#232b43","1,3":"#232b43","2,0":"#232b43","2,2":"#232b43","2,3":"#232b43","3,0":"#232b43","3,1":"#3e3c38","3,2":"#232b43","3,3":"#232b43","3,4":"#232b43","4,0":"#232b43","4,2":"#232b43","4,3":"#232b43","5,0":"#232b43","5,3":"#232b43","6,0":"#232b43","6,3":"#232b43","6,4":"#232b43","6,5":"#232b43","6,6":"#233b43"},"turns":0,"tut":"VII","undead":[{"type":"boneking","x":3,"y":1},{"type":"bonearcher","x":1,"y":0},{"type":"priest","x":5,"y":0}],"updatedAt":1791224860630,"win":"clear","winMusic":"win4"}
+  "VII":{"biome":"hall","brief":"The Bone King [health 5 dead] cannot be shoved or dragged, and its cold hits all four sides at once for [dmg 2 dead]. Keep your knights apart, keep the towns standing, and cut it down. He wears the crown for a reason.","dead":"sharp","ground":["ccccccc","...c...","...c...","ccccccc","c..c..c","c.....c","......."],"hints":0,"id":"lvmujzm7jp3icol","knights":[{"type":"lancer","x":3,"y":5},{"type":"billhook","x":1,"y":5},{"type":"catapult","x":5,"y":5},{"type":"crossbow","x":3,"y":6}],"line":[[{"aim":[5,0],"from":[5,5],"to":[5,4]},{"aim":"N","from":[1,5],"to":[1,3]},{"aim":"N","from":[3,5],"to":[3,2]},{"from":[3,6],"to":[3,6]}],[{"aim":[3,1],"from":[5,4],"to":[3,4]},{"aim":"N","from":[1,3],"to":[0,3]},{"from":[3,6],"to":[3,6]},{"aim":"N","from":[3,3],"to":[3,2]}]],"links":{},"lossMusic":"loss2","map":[".......",".......","..L.L..",".......",".......",".......","H.....A"],"music":"","name":"The Bone King","numeral":"VII","par":3,"read":{"band":"A stroll","bots":{"played":20,"raw":0.5,"stuck":0,"wins":20},"first":0,"found":true,"margin":81,"of":"mdcay4","raw":0.6093750000000027,"score":1,"sharp":0.94,"turn":2,"width":1},"reading":1,"schedule":{},"team":false,"tints":{"0,0":"#232b43","0,3":"#232b43","0,4":"#232b43","0,5":"#232b43","0,6":"#233b43","1,0":"#232b43","1,3":"#232b43","2,0":"#232b43","2,2":"#232b43","2,3":"#232b43","3,0":"#232b43","3,1":"#3e3c38","3,2":"#232b43","3,3":"#232b43","3,4":"#232b43","4,0":"#232b43","4,2":"#232b43","4,3":"#232b43","5,0":"#232b43","5,3":"#232b43","6,0":"#232b43","6,3":"#232b43","6,4":"#232b43","6,5":"#232b43","6,6":"#233b43"},"turns":0,"tut":"VII","undead":[{"type":"boneking","x":3,"y":1},{"type":"bonearcher","x":1,"y":0},{"type":"priest","x":5,"y":0}],"updatedAt":1791227002939,"win":"clear","winMusic":"win4"}
 };
 const tutSaved = numeral => Levels.tutOf(numeral) || TUT_BAKED[numeral] || null;
 function missionDef(i){
@@ -11353,10 +11355,6 @@ const App = (() => {
     el("screen-run").style.setProperty("--map-tall", "url(" + MARCH_MAP.tall + ")");
     el("screen-run").style.setProperty("--map-wide", "url(" + MARCH_MAP.wide + ")");
     for(const m in MARCH_FIELD_MAPS) el("screen-run").style.setProperty("--fmap" + m, "url(" + MARCH_FIELD_MAPS[m].img + ")");
-    /* the website's teaser shows the menu without the two figures, over its
-       painting as the site has it (the owner, Version 223) */
-    if(DEMO){ document.documentElement.classList.add("demo"); document.querySelectorAll(".menu-side").forEach(i => i.remove()); }
-    else { el("menu-side-l").src = MENU_SIDES.l; el("menu-side-r").src = MENU_SIDES.r; }
     document.querySelectorAll(".scr-side").forEach(i => { i.src = MENU_SIDES[i.classList.contains("l") ? "l" : "r"]; });
     if(MENU_SKULL){
       const sk = el("menu-skull");
