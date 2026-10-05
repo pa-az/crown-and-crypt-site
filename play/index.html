@@ -1480,7 +1480,7 @@ h1{
     #screen-menu .crest-art{width:min(62vw,calc(var(--screen) * .25))}
     #screen-menu .menu-skull{--sk:min(54vw,calc(var(--screen) * .23))}
     #screen-menu .menu{gap:6px;margin-top:6px}
-    #screen-menu .entry{padding-block:10px}
+    #screen-menu .entry{height:46px}
     #screen-menu .menu-ver{padding-top:8px}
   }
 }
@@ -1571,6 +1571,43 @@ html,body{overflow-x:hidden}
   content:"";position:absolute;left:0;right:0;top:0;height:min(46vw,210px);z-index:-1;pointer-events:none;
   background:var(--screen-art,none) center bottom/cover no-repeat;filter:brightness(.36) saturate(.8);
   -webkit-mask:linear-gradient(#000 55%,transparent 100%);mask:linear-gradient(#000 55%,transparent 100%)}
+/* the menu's buttons, everywhere: the iron plate (MENU_PLATE, 800 x 241),
+   its ornamented ends 172 px of it each, drawn 36 px wide at 50 px tall */
+#screen-menu .menu{gap:6px}
+#screen-menu .entry{height:50px;padding:0 6px 0 0;border-radius:0;background:none;border-style:solid;border-width:0 36px;
+  border-image:var(--menu-plate) 0 172 fill / 0 36px stretch;grid-template-columns:32px 1fr auto;gap:8px;
+  margin-left:-16px;width:calc(100% + 32px);filter:drop-shadow(0 3px 4px rgba(0,0,0,.55))}
+#screen-menu .entry .e-ico{width:32px;height:32px;margin-left:4px;color:var(--gold)}
+#screen-menu .entry .e-t{text-shadow:0 1px 2px #000}
+#screen-menu .entry .e-meta{text-shadow:0 1px 2px #000}
+#screen-menu .entry.key,#screen-menu .entry:hover{background:none;filter:drop-shadow(0 0 7px rgba(240,190,80,.55)) drop-shadow(0 3px 4px rgba(0,0,0,.55)) brightness(1.12)}
+#screen-menu .entry.key .e-t{color:#F3D27A}
+.menu-paint{display:none}
+/* on a phone: the menu is the painting (MENU_PAINT, 1536 x 2752 at the
+   source), laid as cover from the top, its push and its eyes on their own
+   elements; the skull keeps its room but is not shown. The inner screens
+   carry the same painting at 30% (the owner's pick), full screen */
+@media not all and (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
+  #screen-menu::before{display:none}
+  #screen-menu .menu-fog{height:100%}
+  #screen-menu .menu-skull{visibility:hidden}
+  .menu-paint{display:block;position:absolute;top:0;bottom:0;left:calc(50% - 50vw);right:calc(50% - 50vw);z-index:-1;overflow:hidden;pointer-events:none}
+  .menu-paint .pic{position:absolute;left:50%;top:0;width:max(100%, calc(var(--screen) * 1536 / 2752));aspect-ratio:1536/2752;
+    translate:-50% 0;background:var(--menu-paint,none) center/100% 100% no-repeat;filter:brightness(.92);
+    transform-origin:50% 0;animation:paintpush 40s ease-in-out infinite alternate}
+  /* the skull's eyes: the painting's own red taken out, so these alone show,
+     the same on both, dim to bright over 4.5 s and back */
+  .menu-paint .eye{position:absolute;width:6%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;
+    background:radial-gradient(circle,#FFE2C8 0,#FF4A26 16%,rgba(240,40,20,.6) 30%,rgba(220,30,10,.22) 46%,rgba(220,30,10,0) 70%);
+    animation:eyeglow 4.5s ease-in-out infinite alternate}
+  .menu-paint .eye.l{left:43.95%;top:20.75%}
+  .menu-paint .eye.r{left:55.85%;top:20.8%}
+  #screen-run::before,#screen-tutorial::before,#screen-settings::before,#screen-ach::before{position:fixed;top:0;bottom:0;height:auto;
+    background:var(--menu-paint,none) center top/cover no-repeat;filter:brightness(.3) saturate(.85);-webkit-mask:none;mask:none}
+}
+@keyframes paintpush{from{transform:scale(1)}to{transform:scale(1.07)}}
+@keyframes eyeglow{from{opacity:.25}to{opacity:1}}
+@media (prefers-reduced-motion: reduce){ .menu-paint .pic,.menu-paint .eye{animation:none} }
 .crest-art[hidden],.board.crest[hidden]{display:none}
 /* the title lockup sits under the painted knight-and-crowned-skeleton crest */
 .menu-title{margin-top:0;line-height:0;position:relative;z-index:1}
@@ -2117,6 +2154,7 @@ html,body{overflow-x:hidden}
 
 <main class="screen" id="screen-menu">
   <img class="menu-side l" id="menu-side-l" alt="" aria-hidden="true"><img class="menu-side r" id="menu-side-r" alt="" aria-hidden="true">
+  <div class="menu-paint" aria-hidden="true"><div class="pic"><i class="eye l"></i><i class="eye r"></i></div></div>
   <div class="menu-fog" aria-hidden="true"><i></i><i></i></div>
   <div class="menu-top">
     <div class="board crest" id="crest" data-biome="road" aria-hidden="true">
@@ -2470,7 +2508,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 219;
+const VERSION = "1.0", BUILD = 220;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -5007,6 +5045,14 @@ const GATE_ART = (hp, j, look) => {
 const MENU_SIDES = {l:"../assets/img/MENU_SIDES_997d96fb0e.webp",
   r:"../assets/img/MENU_SIDES_r_4091.webp"};
 const MENU_ART = "../assets/img/MENU_ART_daa0dd99d2.webp";
+/* the menu on a phone (pass 58, Version 220, the owner's pick): one upright
+   painting, the knights' camp and the dead's across a misty valley under a
+   vast crowned skull in the fog, its eyes drawn over it (.menu-paint); the
+   inner screens carry it too, darkened. Held wide the menu keeps MENU_ART */
+const MENU_PAINT = "../assets/img/MENU_PAINT_58eacd6c88.webp";
+/* the menu's buttons: a black iron plate with gold trim (pass 60), its ends
+   kept and its middle stretched (border-image) */
+const MENU_PLATE = "../assets/img/MENU_PLATE_5debef4cf8.webp";
 /* the menu buttons' icons, painted; the line drawings in the markup stay as
    the fallback */
 /* the three numbers on a unit's card: how far it walks, what a blow does,
@@ -5037,12 +5083,12 @@ function marked(text){
 const unmarked = text => String(text || "").replace(MARK_RE, (_, k, n) => MARK_SAY[k] + " " + n);
 
 const MENU_ICONS = {
-  march:"../assets/img/MENU_ICONS_march_9d2c.webp",
-  tutorial:"../assets/img/MENU_ICONS_tutorial_6111.webp",
-  editor:"../assets/img/MENU_ICONS_editor_4392.webp",
+  march:"../assets/img/MENU_ICONS_march_54b9.webp",
+  tutorial:"../assets/img/MENU_ICONS_tutorial_e874.webp",
+  editor:"../assets/img/MENU_ICONS_editor_32f7.webp",
   rules:"../assets/img/MENU_ICONS_rules_899e.webp",
-  ach:"../assets/img/MENU_ICONS_ach_0b20.webp",
-  settings:"../assets/img/MENU_ICONS_settings_91c9.webp"
+  ach:"../assets/img/MENU_ICONS_ach_3d73.webp",
+  settings:"../assets/img/MENU_ICONS_settings_d4b4.webp"
 };
 /* an emblem for each march on the road screen, in MARCHES order: a banner
    over the barrows at dusk (repainted 2026-09-27 to sit as dark as the other
@@ -11230,6 +11276,8 @@ const App = (() => {
     if(SCREEN_ART) document.documentElement.style.setProperty("--screen-art", "url(" + SCREEN_ART + ")");
     if(FRAME_ART) document.documentElement.style.setProperty("--frame-art", "url(" + FRAME_ART + ")");
     if(MENU_ART) el("screen-menu").style.setProperty("--menu-art", "url(" + MENU_ART + ")");
+    document.documentElement.style.setProperty("--menu-paint", "url(" + MENU_PAINT + ")");
+    document.documentElement.style.setProperty("--menu-plate", "url(" + MENU_PLATE + ")");
     el("screen-run").style.setProperty("--map-tall", "url(" + MARCH_MAP.tall + ")");
     el("screen-run").style.setProperty("--map-wide", "url(" + MARCH_MAP.wide + ")");
     for(const m in MARCH_FIELD_MAPS) el("screen-run").style.setProperty("--fmap" + m, "url(" + MARCH_FIELD_MAPS[m].img + ")");
