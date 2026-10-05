@@ -2510,7 +2510,7 @@ html,body{overflow-x:hidden}
          2026-09-30: "1, 2, 3" read as steps, and par was never explained) -->
     <div class="htp-stars">
       <div><b></b><span>Win the field</span></div>
-      <div><b></b><span>Every knight still standing, or on a few fields win by an earlier turn</span></div>
+      <div><b></b><span>Every knight still standing, or on a few fields a win by an earlier turn or with one knight lost at most</span></div>
       <div><b></b><span>Win fast, or on a Hold field keep every town</span></div>
     </div>
     <p class="htp-win">Each star counts on its own. Fast means by the field's par turn: miss it and the win tells you the turn to beat.</p>
@@ -2529,7 +2529,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 227;
+const VERSION = "1.0", BUILD = 228;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -4743,10 +4743,14 @@ const Engine = (() => {
     const all = standing.length === s.roster.length;
     /* where no win keeps every knight (the search's word, Version 227: The
        Black Tarn, The Throne of Bone), the second star is a win by the
-       fewest turns found instead (def.fast); `all` stays what it says, for
-       the achievements that ask for it */
-    const second = s.def.fast ? s.turn <= s.def.fast : all;
-    const secondWhy = s.def.fast ? "won by turn " + s.def.fast : "every knight standing";
+       fewest turns found instead (def.fast); on the two Hold fields where
+       none does, no more than one knight lost (def.spare, Version 228);
+       `all` stays what it says, for the achievements that ask for it */
+    const second = s.def.fast ? s.turn <= s.def.fast
+      : s.def.spare ? standing.length >= s.roster.length - s.def.spare : all;
+    const secondWhy = s.def.fast ? "won by turn " + s.def.fast
+      : s.def.spare ? "no more than " + (s.def.spare === 1 ? "one knight" : s.def.spare + " knights") + " lost"
+      : "every knight standing";
     let third, thirdWhy;
     if(s.def.win === "survive"){
       third = s.townMax > 0 ? s.town === s.townMax : standing.every(u => u.hp >= u.maxHp);
@@ -4789,7 +4793,7 @@ const Engine = (() => {
     {id:"hex_broken", name:"The Hex Broken", desc:"Break a hex with the Chaplain's blessing on the road.", pts:20},
     {id:"hook_deep", name:"The Hook and the Deep", desc:"Drag one of the dead into water or lava with the Hookman on the road.", pts:30},
     {id:"kingslayer", name:"Kingslayer", desc:"Cut down a Bone King on the road.", pts:25},
-    {id:"throne", name:"The Throne Emptied", desc:"Win The Throne of Bone with every knight standing.", pts:50, hidden:true, field:"The Throne of Bone"},
+    {id:"throne", name:"The Throne Emptied", desc:"Win The Throne of Bone by turn 6.", pts:50, hidden:true, field:"The Throne of Bone"},
     {id:"abbey", name:"The Abbey Stands", desc:"Hold The Burning Abbey with every town whole.", pts:50, hidden:true, field:"The Burning Abbey"},
     {id:"black_tarn", name:"Deep Are the Tarns", desc:"Drown three of the dead in one fight on The Black Tarn.", pts:40, hidden:true, field:"The Black Tarn"},
     {id:"gatehouse", name:"The Last Gate Falls", desc:"Win The Gatehouse with all three stars.", pts:60, hidden:true, field:"The Gatehouse"}
@@ -4833,7 +4837,9 @@ const Engine = (() => {
     if(e.n === 3) got.push("three_stars");
     if(lastMarch && e.all) got.push("none_left");
     if(s.def.par && s.turn < s.def.par) got.push("swift");
-    if(onField(s, "throne") && e.all) got.push("throne");
+    /* by turn 6, its second star (Version 228, the owner's word): no win
+       there keeps every knight, which is what this asked until 227 */
+    if(onField(s, "throne") && s.turn <= 6) got.push("throne");
     if(onField(s, "abbey") && s.townMax > 0 && s.town === s.townMax) got.push("abbey");
     if(onField(s, "gatehouse") && e.n === 3) got.push("gatehouse");
     return got;
@@ -9562,7 +9568,7 @@ const Editor = (() => {
   const fresh = () => ({
     numeral:"?", name:"", win:"clear", turns:0, biome:"hall",
     brief:"", map:blank(), ground:blank(), links:{}, tints:{}, looks:{}, knights:[], undead:[], schedule:{},
-    dead:"sharp", team:false, par:0, fast:0, hints:0, music:"", winMusic:"", lossMusic:"", line:null, read:null
+    dead:"sharp", team:false, par:0, fast:0, spare:0, hints:0, music:"", winMusic:"", lossMusic:"", line:null, read:null
   });
   /* a field drawn before there was a ground layer keeps its look: every ground
      character in the map becomes the ground under that tile */
@@ -9996,7 +10002,7 @@ const Editor = (() => {
     el("ed-dead").value = draft.dead || "sharp";
     el("ed-team").checked = !!draft.team;
     el("ed-par").value = String(draft.par || 0);
-    el("ed-fast").value = String(draft.fast || 0);
+    el("ed-fast").value = draft.spare ? "spare" : String(draft.fast || 0);
     el("ed-hints").value = draft.hints ? "1" : "0";
     /* every battle track in the file, the march's own first */
     const ms = el("ed-music");
@@ -10373,7 +10379,7 @@ const Editor = (() => {
       links:def.links || {},
       tints:def.tints || {},
       looks:def.looks || {},
-      dead:def.dead || "sharp", team:!!def.team, par:def.par || 0, fast:def.fast || 0, hints:def.hints || 0,
+      dead:def.dead || "sharp", team:!!def.team, par:def.par || 0, fast:def.fast || 0, spare:def.spare || 0, hints:def.hints || 0,
       music:def.music || "", winMusic:def.winMusic || "", lossMusic:def.lossMusic || "",
       reading:def.reading || 0, line:def.line || null, read:def.read || null,
       knights:def.knights.map(k => ({...k, type:E.unitType(k.type, "knight")})),
@@ -10491,13 +10497,17 @@ const Editor = (() => {
   el("ed-lay").onclick = layLook;
   el("ed-turns").onchange = e => { draft.turns = Number(e.target.value); touched(); refresh(); };
   for(let n = 2; n <= 16; n++) el("ed-par").insertAdjacentHTML("beforeend", '<option value="' + n + '">' + n + ' turns</option>');
+  el("ed-fast").insertAdjacentHTML("beforeend", '<option value="spare">no more than one knight lost</option>');
   for(let n = 2; n <= 16; n++) el("ed-fast").insertAdjacentHTML("beforeend", '<option value="' + n + '">won by turn ' + n + '</option>');
   /* anything that changes how the dead play changes the reading, so the bar
      is taken again */
   el("ed-dead").onchange = e => { draft.dead = e.target.value; touched(); refresh(); };
   el("ed-team").onchange = e => { draft.team = e.target.checked; touched(); refresh(); };
   el("ed-par").onchange = e => { draft.par = Number(e.target.value); touched(); };
-  el("ed-fast").onchange = e => { draft.fast = Number(e.target.value); touched(); };
+  el("ed-fast").onchange = e => {
+    const v = e.target.value;
+    draft.spare = v === "spare" ? 1 : 0; draft.fast = v === "spare" ? 0 : Number(v); touched();
+  };
   el("ed-hints").onchange = e => { draft.hints = Number(e.target.value); touched(); };
   el("ed-music").onchange = e => { draft.music = e.target.value; touched(); };
   el("ed-winmusic").onchange = e => { draft.winMusic = e.target.value; touched(); };
@@ -10924,7 +10934,7 @@ const levelDef = l => ({numeral:"?", name:l.name, brief:l.brief || "", win:l.win
   /* what the field asks of the dead and of the player, set in the editor:
      how the dead think, whether they plan as one, whether they aim a turn
      ahead, the par for the third star, and hints of its own */
-  dead:l.dead || "sharp", team:!!l.team, par:l.par || 0, fast:l.fast || 0, hints:l.hints || 0, tut:l.tut || undefined, music:l.music || "",
+  dead:l.dead || "sharp", team:!!l.team, par:l.par || 0, fast:l.fast || 0, spare:l.spare || 0, hints:l.hints || 0, tut:l.tut || undefined, music:l.music || "",
   winMusic:l.winMusic || "", lossMusic:l.lossMusic || "",
   /* a winning line the editor's reading found, which the hints follow */
   line:l.line || null});
