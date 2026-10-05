@@ -15,10 +15,10 @@ body{background:var(--bg);color:var(--ink);font:17px/1.6 "Alegreya Sans",system-
 img{display:block;max-width:100%}
 a{color:var(--gold)} a:hover{color:#f0c55a}
 
-/* ---------- hero: the barrow at dusk, mist rolling through it ---------- */
+/* ---------- hero: the keep and the tarn at night (pass 62), mist rolling through it ---------- */
 .hero{position:relative;isolation:isolate;overflow:hidden;text-align:center;padding:30px 16px 40px;min-height:min(100svh,860px);
   display:flex;flex-direction:column;align-items:center;justify-content:center}
-.hero .bg{position:absolute;inset:0;z-index:-3;background:url(assets/backdrop.webp) center 30%/cover no-repeat;filter:brightness(.62) saturate(.9)}
+.hero .bg{position:absolute;inset:0;z-index:-3;background:url(assets/backdrop-keep.webp) center 30%/cover no-repeat;filter:brightness(.62) saturate(.9)}
 .hero .shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(16,18,21,.2) 0%,transparent 35%,rgba(16,18,21,.35) 70%,var(--bg) 100%)}
 .fog{position:absolute;left:0;right:0;z-index:-2;pointer-events:none;background:url(assets/fog.png) 0 0/1024px 100% repeat-x;
   animation:roll 30s linear infinite;will-change:background-position}
@@ -33,6 +33,8 @@ a{color:var(--gold)} a:hover{color:#f0c55a}
 .crest{width:min(64vw,245px);aspect-ratio:1;mix-blend-mode:lighten;margin:0 auto -12px;
   -webkit-mask:radial-gradient(closest-side,#000 72%,transparent);mask:radial-gradient(closest-side,#000 72%,transparent);
   animation:rise 1.4s ease-out both}
+/* on a big screen the crest larger, with the window's height (2026-10-05) */
+@media(min-width:900px){.crest{width:clamp(245px,38vh,360px)}}
 @keyframes rise{from{opacity:0;transform:translateY(calc(var(--crest-offset,30px) + 10px))}to{opacity:1;transform:translateY(var(--crest-offset,30px))}}
 /* the banner as the game's menu has it: 40% of the red, so the dusk shows
    through and darkens it; the words stay solid */
