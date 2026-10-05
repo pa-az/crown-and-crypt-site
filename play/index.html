@@ -719,6 +719,8 @@ h1{
   animation:pulse 2.2s ease-in-out infinite;
 }
 .spawn .ico{position:relative;width:52%;height:52%;color:var(--bone-dim);opacity:.9}
+.tileface .spawn{position:absolute;inset:0;display:flex}
+.spawn.shut .ring{animation:none;opacity:.9;border-width:2px}
 .spawn .ico svg{width:100%;height:100%;display:block}
 .spawn .hp{position:relative;color:var(--bone-dim);opacity:.9}
 @keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
@@ -2537,7 +2539,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 224;
+const VERSION = "1.0", BUILD = 225;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -2642,11 +2644,11 @@ const Engine = (() => {
               down:"Two health, two tiles of reach, and engines breathe nothing."},
       wp:{name:"Plague Pot", short:"[dmg 1 dead] on any tile within [reach 2 dead], over anything. On empty ground it leaves fog for two turns.", kind:"bomb", min:1, range:2, dmg:1, missile:"pot",
           blurb:"Slings a pot onto any tile within two of it, over anything in between. 1 damage to whatever it breaks on. On empty ground it leaves plague fog that stays two turns, and a knight that walks into it, or ends your turn in it, loses 1 health. With no knight to hit, it fogs the ground beside one."}},
-    priest:{name:"Grave Priest", side:"undead", hp:2, move:2, note:"Marks the ground beside it. A ghoul climbs out a turn later.",
+    priest:{name:"Grave Priest", side:"undead", hp:2, move:2, note:"Marks the ground beside it. A ghoul rises there a turn later. Step on it to stamp it out.",
       traits:{up:"Raises a ghoul beside it every turn it lives.",
               down:"Two health, and the rite breaks with the priest."},
-      wp:{name:"Raising Rite", short:"Marks the ground beside it. A ghoul climbs out a turn later.", kind:"rite", dmg:0,
-          blurb:"Marks the ground beside it every turn it lives, and a ghoul climbs out a turn later. Kill the priest and the rite breaks."}},
+      wp:{name:"Raising Rite", short:"Marks the ground beside it. A ghoul [health 2 dead] climbs out a turn later.", kind:"rite", dmg:0,
+          blurb:"Marks the ground beside it every turn it lives, and a ghoul with 2 health climbs out a turn later. A knight that steps on the mark stamps it out, and one of the dead standing on it keeps it shut. Kill the priest and the rite breaks."}},
     witch:{name:"Barrow Witch", side:"undead", hp:2, move:2, note:"Hexes a tile. Begin a turn on one and you walk [move 2]; end one on it and you are held.", wary:true,
       traits:{up:"Hexes the ground up to three tiles off. Hexed ground grips the feet and can cost a whole turn.",
               down:"Two health, no blow of her own, and a hex takes a turn to close."},
@@ -3155,6 +3157,18 @@ const Engine = (() => {
     const breathes = u.side==="knight" && (x!==u.x || y!==u.y) && s.fog.length && mustBreathe(s,u,x,y);
     u.x=x; u.y=y;
     if(breathes) poison(s,u);
+    if(u.side==="knight") stamp(s,u);
+  }
+  /* a knight that steps on a Grave Priest's mark stamps it out, at no cost
+     (Version 225, the owner's word: blocking it had cost a point and the
+     whole of the dead's turn stood beside the priest). A barrow opened by
+     the field's waves is not a rite and is not stamped out */
+  function stamp(s,u){
+    const m = s.markers.find(m => m.by !== undefined && m.x===u.x && m.y===u.y);
+    if(!m) return;
+    s.markers = s.markers.filter(o => o !== m);
+    pop(u.x, u.y, "stamped", "good");
+    say(TYPES[u.type].name + " stamps out the priest's mark.");
   }
 
   /* ---------- attacks ---------- */
@@ -4586,6 +4600,7 @@ const Engine = (() => {
   }
 
   /* ---------- barrows ---------- */
+  const RISEN_HP = 2;
   function emerge(s){
     for(const m of s.markers){
       if(m.by !== undefined && !s.units.some(u => u.id === m.by && !u.dead)){
@@ -4593,7 +4608,9 @@ const Engine = (() => {
       }
       const on = unitAt(s,m.x,m.y);
       if(on){
-        if(on.side==="knight"){
+        if(on.side==="knight" && m.by !== undefined){
+          say(TYPES[on.type].name + " stamps out the priest's mark.");
+        } else if(on.side==="knight"){
           say(TYPES[on.type].name + " smothers the thing clawing out of the barrow.");
           hurtUnit(s,on,1);
         } else {
@@ -4601,9 +4618,9 @@ const Engine = (() => {
         }
         continue;
       }
-      const T = TYPES[m.type];
+      const T = TYPES[m.type], hp = m.hp || T.hp;
       s.units.push({id:s.units.reduce((a,u)=>Math.max(a,u.id),0)+1, type:m.type, side:T.side,
-        label:T.name, x:m.x, y:m.y, hp:T.hp, maxHp:T.hp, moved:false, acted:false, dead:false, plan:null});
+        label:T.name, x:m.x, y:m.y, hp, maxHp:hp, moved:false, acted:false, dead:false, plan:null});
       pop(m.x, m.y, "risen", "hurt");
       say("A " + T.name + " claws its way out of the earth.");
     }
@@ -4637,7 +4654,8 @@ const Engine = (() => {
         if(!best || sc < best.sc) best = {x, y, sc};
       }
       if(best){
-        s.markers.push({x:best.x, y:best.y, type:"ghoul", by:p.id});
+        /* a priest's ghoul comes up with 2 health, not a barrow's 3 (Version 225) */
+        s.markers.push({x:best.x, y:best.y, type:"ghoul", by:p.id, hp:RISEN_HP});
         pop(best.x, best.y, "rite", "hurt");
         say("A Grave Priest marks the ground. Something will rise there.");
       }
@@ -7432,11 +7450,15 @@ function renderMarks(){
   if(hint && S.result === "playing") drawHint();
 
   for(const m of S.markers){
-    const d = markEl("spawn", m.x, m.y);
-    const pips = Array.from({length:T[m.type].hp}, () => "<i></i>").join("");
-    d.innerHTML = '<div class="ring"></div><div class="ico">' + unitGlyph(m.type) + '</div>' +
+    /* a body on the mark keeps it shut: only the ring shows round it, under
+       the piece (the ghoul's picture was drawn over whatever stood there) */
+    const on = S.units.some(u => !u.dead && u.x===m.x && u.y===m.y);
+    const d = markEl("spawn" + (on ? " shut" : ""), m.x, m.y);
+    const hp = m.hp || T[m.type].hp;
+    const pips = Array.from({length:hp}, () => "<i></i>").join("");
+    d.innerHTML = on ? '<div class="ring"></div>' : '<div class="ring"></div><div class="ico">' + unitGlyph(m.type) + '</div>' +
       '<div class="hp">' + pips + '</div>';
-    d.title = T[m.type].name + ", " + T[m.type].hp + " health, rises here at the end of next turn";
+    d.title = T[m.type].name + ", " + hp + " health, rises here at the end of next turn";
     elMarks.appendChild(d);
   }
 
@@ -7695,6 +7717,16 @@ function tileFace(t){
     f.appendChild(p);
   }
   return f;
+}
+/* what a tapped tile is: a mark on it first, as that is what happens next */
+function spotInfo(x, y){
+  const m = S.markers.find(m => m.x===x && m.y===y);
+  if(!m) return tileInfo(E.tile(S, x, y));
+  const name = T[m.type].name, hp = m.hp || T[m.type].hp;
+  if(m.by !== undefined) return {name:"Priest's mark", meta:marked("[health " + hp + " dead]"),
+    desc:"A " + name + " climbs out here when the dead's turn ends. A knight that steps on it stamps it out, and one of the dead standing on it keeps it shut. Kill the priest and it breaks."};
+  return {name:"Open barrow", meta:marked("[health " + hp + " dead]"),
+    desc:"A " + name + " climbs out here when the dead's turn ends. A knight standing on it takes [dmg 1 dead] and keeps it shut."};
 }
 function tileInfo(t){
   if(!t) return null;
@@ -7979,11 +8011,13 @@ function renderBar(){
         : armed ? "Tap a tile to move, or tap it again to strike from where it stands."
                 : "Tap a tile to move. Nothing is in reach from here.") + '</div></div>');
     if(undoSnap && undoSnap.id===u.id && !u.acted) elBtns.appendChild(btn("Undo move", undoMove, "slim"));
-  } else if(selTile && tileInfo(E.tile(S, selTile.x, selTile.y))){
-    const st = E.tile(S, selTile.x, selTile.y), info = tileInfo(st);
+  } else if(selTile && spotInfo(selTile.x, selTile.y)){
+    const st = E.tile(S, selTile.x, selTile.y), info = spotInfo(selTile.x, selTile.y);
     elInfo.innerHTML = '<div><div class="who">' + info.name + (info.meta ? "  " + info.meta : "") +
       '</div><div class="desc">' + marked(info.desc) + '</div></div>';
-    elInfo.prepend(tileFace(st));
+    const face = tileFace(st), m = S.markers.find(m => m.x===selTile.x && m.y===selTile.y);
+    if(m) face.insertAdjacentHTML("beforeend", '<div class="spawn"><div class="ring"></div><div class="ico">' + unitGlyph(m.type) + '</div></div>');
+    elInfo.prepend(face);
   } else if(restartAsk){
     elInfo.innerHTML = '<div><div class="who goal">Start over?</div><div class="desc">' +
       'Tap restart again to throw this fight away.</div></div>';
@@ -8235,7 +8269,7 @@ function tap(x,y){
   if(cur && cur.side==="knight" && !cur.moved && !(cur.x===x && cur.y===y)){
     const mv = E.reachable(S,cur);
     if(mv.has(x+","+y) && !u){
-      undoSnap = {id:cur.id, x:cur.x, y:cur.y, poisoned:!!cur.poisoned};
+      undoSnap = {id:cur.id, x:cur.x, y:cur.y, poisoned:!!cur.poisoned, markers:S.markers.slice()};
       const walked = walkPath(cur, x, y);
       E.moveUnit(S,cur,x,y);
       /* a lungful of fog taken on the way shows and coughs as it arrives,
@@ -8265,7 +8299,7 @@ function tap(x,y){
   }
   hold(null);
   /* bare ground with something standing on it: take the tile in hand instead */
-  if(tileInfo(E.tile(S,x,y))) selTile = {x, y};
+  if(spotInfo(x, y)) selTile = {x, y};
   render();
 }
 
@@ -8300,6 +8334,7 @@ function undoMove(){
   if(!u || !undoSnap || undoSnap.id!==u.id || u.acted) return;
   E.moveUnit(S,u,undoSnap.x,undoSnap.y);
   u.poisoned = undoSnap.poisoned;      /* the lungful is taken back with the step */
+  S.markers = undoSnap.markers;        /* and a priest's mark it stamped out */
   u.moved = false;
   undoSnap = null;
   mode = "idle"; pending = null; aim = [];
@@ -8490,7 +8525,7 @@ const GROUND_GUIDE = [
   ["town", "Town", "[hits 2]: burns at the first, falls at the second, yours included."],
   ["fog", "Plague fog", "Left where a pot breaks on empty ground. Walk in or stay in it: [health -1 dead] next turn. Engines never breathe it."],
   ["hex", "Hex", "Begin a turn on it: [move 2]. End a turn on it: lose a turn."],
-  ["mark", "Marked ground", "The dead climb out here next turn. A knight standing on it takes [dmg 1 dead] and stops them."]
+  ["mark", "Marked ground", "The dead climb out here next turn. A knight standing on it takes [dmg 1 dead] and stops them. A knight that steps on a Grave Priest's mark stamps it out for nothing."]
 ];
 function fillGround(){
   const box = document.getElementById("htp-ground");
@@ -10908,7 +10943,7 @@ const TUT_BAKED = {
   "IV":{"biome":"barrow","brief":"Towns [hits 2] catch fire at the first hit and burn down at the second. Lose every town and you lose the field. The Catapult throws over anything, but its stone hurts towns too. The villagers would like a word.","dead":"sharp","ground":["h......","hh.....","hrhhnnn","chhhhhh","cchhhhh","c.hhhhh","cchhhhh"],"hints":0,"id":"lvmujz3plv9xnpx","knights":[{"type":"lancer","x":3,"y":4},{"type":"crossbow","x":2,"y":6},{"type":"catapult","x":4,"y":6}],"line":[[{"aim":"N","from":[3,4],"to":[3,1]},{"from":[2,6],"to":[2,5]},{"aim":[4,0],"from":[4,6],"to":[4,4]}],[{"aim":"E","from":[3,2],"to":[5,3]},{"aim":"N","from":[2,5],"to":[3,3]},{"aim":[3,1],"from":[4,4],"to":[3,4]}]],"links":{},"looks":{},"lossMusic":"loss4","map":[".......","..T.T..",".B...B.",".......",".......",".H...V.","......."],"music":"","name":"The Burning Towns","numeral":"IV","par":3,"read":{"band":"A stroll","bots":{"played":20,"raw":0.67,"stuck":0,"wins":20},"first":0,"found":true,"margin":85,"of":"1we8ewe","raw":0.6923076923076918,"score":1,"sharp":0.77,"turn":2,"width":1},"reading":1,"schedule":{},"team":false,"tints":{"0,3":"#433323","0,4":"#433323","0,5":"#433323","0,6":"#433323","2,0":"#433323","2,1":"#433b23","2,2":"#433323","3,1":"#433323","4,0":"#433323","4,1":"#433323","4,2":"#433323","5,1":"#433323","5,3":"#433323","6,2":"#433323","6,3":"#433323"},"turns":0,"tut":"IV","undead":[{"type":"ghoul","x":1,"y":0},{"type":"ghoul","x":5,"y":0},{"type":"bonearcher","x":3,"y":0}],"updatedAt":1790855630268,"win":"clear","winMusic":"win4"},
   "V":{"biome":"marsh","brief":"Walls [hits 3] stop arrows. Lava finishes anything shoved into it, like water. Your Trebuchet throws [dmg 2] over walls on the diagonal. Mind your step.","dead":"sharp","ground":["ccccccc","ccccccc","cc.c...",".c.ccc.",".ccccc.",".ccccc.","......."],"hints":0,"id":"lvmujz85lnue345","knights":[{"type":"lancer","x":3,"y":5},{"type":"crossbow","x":1,"y":5},{"type":"trebuchet","x":5,"y":5}],"line":[[{"aim":[1,1],"from":[5,5],"to":[4,4]},{"from":[3,5],"to":[3,5]},{"from":[1,5],"to":[1,5]}],[{"aim":[2,3],"from":[4,4],"to":[4,5]},{"aim":"E","from":[1,5],"to":[2,3]},{"aim":"N","from":[3,5],"to":[3,2]}]],"links":{},"looks":{},"lossMusic":"loss4","map":[".......",".......","SSS.SSS","S.L.L.S","S.....S","S.....S","SSSSSSS"],"music":"","name":"Stone and Fire","numeral":"V","par":3,"read":{"band":"A stroll","bots":{"played":20,"raw":0,"stuck":0,"wins":20},"first":0,"found":true,"margin":100,"of":"lw9t2w","raw":0,"score":0,"sharp":0,"turn":2,"width":1},"reading":0,"schedule":{},"team":false,"tints":{"0,2":"#3e3c38","0,3":"#3e3c38","0,4":"#3e3c38","0,5":"#3e3c38","0,6":"#3e3c38","1,2":"#3e3c38","1,3":"#3e3c38","1,4":"#3e3c38","1,5":"#3e3c38","1,6":"#3e3c38","2,2":"#3e3c38","2,3":"#3e3c38","2,4":"#3e3c38","2,5":"#3e3c38","2,6":"#3e3c38","3,5":"#3e3c38","3,6":"#3e3c38","4,2":"#3e3c38","4,3":"#3e3c38","4,4":"#3e3c38","4,5":"#3e3c38","4,6":"#3e3c38","5,2":"#3e3c38","5,3":"#3e3c38","5,4":"#3e3c38","5,5":"#3e3c38","5,6":"#3e3c38","6,2":"#3e3c38","6,3":"#3e3c38","6,4":"#3e3c38","6,5":"#3e3c38","6,6":"#3e3c38"},"turns":0,"tut":"V","undead":[{"type":"ghoul","x":3,"y":0},{"type":"bonearcher","x":1,"y":1},{"type":"slinger","x":5,"y":1}],"updatedAt":1790855626258,"win":"clear","winMusic":"win4"},
   "VI":{"biome":"hall","brief":"The Barrow Witch hexes a tile within [reach 3 dead] each turn. Start a turn on a hex and you walk [move 2]; end one on it and you lose your next turn. A Mantlet shields her from arrows. The lance can shove it aside. The Chaplain blesses a tile within [reach 2], breaking the hex and freeing whoever it holds. Witches hate that.","dead":"sharp","ground":["rr.r.rr","rreeerr","re...er","e.....e",".......",".......","......."],"hints":0,"id":"lvmujzdi5gdgw5d","knights":[{"type":"lancer","x":2,"y":5},{"type":"crossbow","x":4,"y":5},{"type":"chaplain","x":3,"y":6}],"line":[[{"aim":"N","from":[4,5],"to":[3,4]},{"from":[2,5],"to":[2,5]},{"from":[3,6],"to":[4,6]}],[{"aim":"E","from":[3,4],"to":[1,3]},{"aim":"N","from":[2,5],"to":[1,5]},{"from":[4,6],"to":[2,6]}],[{"aim":"S","from":[1,5],"to":[4,5]},{"aim":[1,3],"from":[2,6],"to":[2,5]},{"aim":"N","from":[1,3],"to":[3,2]}]],"links":{},"looks":{},"lossMusic":"loss4","map":["..G.G..",".......","P.....P",".......",".......","S.....S","S.....S"],"music":"","name":"The Hex","numeral":"VI","par":4,"read":{"band":"A stroll","bots":{"played":20,"raw":0.62,"stuck":0,"wins":20},"first":0,"found":true,"margin":100,"of":"1pym797","raw":0.46125000000000016,"score":0,"sharp":0,"turn":3,"width":1},"reading":0,"schedule":{},"team":false,"tints":{"0,0":"#382343","0,5":"#232b43","1,1":"#382343","1,6":"#232b43","2,5":"#233b43","3,0":"#382343","3,6":"#233b43","4,5":"#233b43","5,1":"#382343","5,6":"#232b43","6,0":"#382343","6,5":"#232b43"},"turns":0,"tut":"VI","undead":[{"type":"witch","x":3,"y":0},{"type":"mantlet","x":3,"y":1},{"type":"ghoul","x":1,"y":1},{"type":"ghoul","x":5,"y":1}],"updatedAt":1791002402537,"win":"clear","winMusic":"win4"},
-  "VII":{"biome":"hall","brief":"The Bone King [health 5 dead] cannot be shoved or dragged, and its cold hits all four sides at once for [dmg 2 dead]. Keep your knights apart, keep the towns standing, and cut it down. He wears the crown for a reason.","dead":"sharp","ground":["ccccccc","...c...","...c...","ccccccc","c..c..c","c.....c","......."],"hints":0,"id":"lvmujzm7jp3icol","knights":[{"type":"lancer","x":3,"y":5},{"type":"billhook","x":1,"y":5},{"type":"catapult","x":5,"y":5},{"type":"crossbow","x":3,"y":6}],"line":[[{"aim":[5,0],"from":[5,5],"to":[5,4]},{"aim":"N","from":[1,5],"to":[1,3]},{"aim":"N","from":[3,5],"to":[3,2]},{"from":[3,6],"to":[3,6]}],[{"aim":[3,1],"from":[5,4],"to":[3,4]},{"aim":"N","from":[1,3],"to":[0,3]},{"from":[3,6],"to":[3,6]},{"aim":"N","from":[3,3],"to":[3,2]}]],"links":{},"lossMusic":"loss2","map":[".......",".......","..L.L..",".......",".......",".......","H.....A"],"music":"","name":"The Bone King","numeral":"VII","par":3,"read":{"band":"A stroll","bots":{"played":20,"raw":0.5,"stuck":0,"wins":20},"first":0,"found":true,"margin":81,"of":"mdcay4","raw":0.6093750000000027,"score":1,"sharp":0.94,"turn":2,"width":1},"reading":1,"schedule":{},"team":false,"tints":{"0,0":"#232b43","0,3":"#232b43","0,4":"#232b43","0,5":"#232b43","0,6":"#233b43","1,0":"#232b43","1,3":"#232b43","2,0":"#232b43","2,2":"#232b43","2,3":"#232b43","3,0":"#232b43","3,1":"#3e3c38","3,2":"#232b43","3,3":"#232b43","3,4":"#232b43","4,0":"#232b43","4,2":"#232b43","4,3":"#232b43","5,0":"#232b43","5,3":"#232b43","6,0":"#232b43","6,3":"#232b43","6,4":"#232b43","6,5":"#232b43","6,6":"#233b43"},"turns":0,"tut":"VII","undead":[{"type":"boneking","x":3,"y":1},{"type":"bonearcher","x":1,"y":0},{"type":"priest","x":5,"y":0}],"updatedAt":1790855638694,"win":"clear","winMusic":"win4"}
+  "VII":{"biome":"hall","brief":"The Bone King [health 5 dead] cannot be shoved or dragged, and its cold hits all four sides at once for [dmg 2 dead]. Keep your knights apart, keep the towns standing, and cut it down. He wears the crown for a reason.","dead":"sharp","ground":["ccccccc","...c...","...c...","ccccccc","c..c..c","c.....c","......."],"hints":0,"id":"lvmujzm7jp3icol","knights":[{"type":"lancer","x":3,"y":5},{"type":"billhook","x":1,"y":5},{"type":"catapult","x":5,"y":5},{"type":"crossbow","x":3,"y":6}],"line":[[{"aim":[5,0],"from":[5,5],"to":[5,4]},{"aim":"N","from":[1,5],"to":[1,3]},{"aim":"N","from":[3,5],"to":[3,2]},{"from":[3,6],"to":[3,6]}],[{"aim":[3,1],"from":[5,4],"to":[3,4]},{"aim":"N","from":[1,3],"to":[0,3]},{"from":[3,6],"to":[3,6]},{"aim":"N","from":[3,3],"to":[3,2]}]],"links":{},"lossMusic":"loss2","map":[".......",".......","..L.L..",".......",".......",".......","H.....A"],"music":"","name":"The Bone King","numeral":"VII","par":3,"read":{"band":"A stroll","bots":{"played":20,"raw":0.5,"stuck":0,"wins":20},"first":0,"found":true,"margin":81,"of":"mdcay4","raw":0.6093750000000027,"score":1,"sharp":0.94,"turn":2,"width":1},"reading":1,"schedule":{},"team":false,"tints":{"0,0":"#232b43","0,3":"#232b43","0,4":"#232b43","0,5":"#232b43","0,6":"#233b43","1,0":"#232b43","1,3":"#232b43","2,0":"#232b43","2,2":"#232b43","2,3":"#232b43","3,0":"#232b43","3,1":"#3e3c38","3,2":"#232b43","3,3":"#232b43","3,4":"#232b43","4,0":"#232b43","4,2":"#232b43","4,3":"#232b43","5,0":"#232b43","5,3":"#232b43","6,0":"#232b43","6,3":"#232b43","6,4":"#232b43","6,5":"#232b43","6,6":"#233b43"},"turns":0,"tut":"VII","undead":[{"type":"boneking","x":3,"y":1},{"type":"bonearcher","x":1,"y":0},{"type":"priest","x":5,"y":0}],"updatedAt":1791222951232,"win":"clear","winMusic":"win4"}
 };
 const tutSaved = numeral => Levels.tutOf(numeral) || TUT_BAKED[numeral] || null;
 function missionDef(i){
