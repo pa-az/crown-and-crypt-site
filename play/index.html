@@ -109,7 +109,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;tou
 .icon{width:38px;height:38px;display:grid;place-items:center;border-radius:4px;color:var(--bone-dim);
   flex:none;transition:color .15s,background .15s}
 .icon svg{width:21px;height:21px}
-.icon:hover{color:var(--bone);background:rgba(228,218,194,.07)}
+.icon:hover{color:var(--bone);background-color:rgba(228,218,194,.07)}
 .icon[hidden]{display:none}
 .icon.sound[data-on]{color:var(--gold)}
 
@@ -2141,6 +2141,69 @@ html,body{overflow-x:hidden}
   #scrim .sheet .sheet-hd{width:calc(100% + 52px);margin:-24px -26px 14px}
   #scrim .sheet p,#scrim .sheet li{font-size:15.5px}
 }
+/* ---------- painted controls (pass 65, Version 229, the owner's picks) ----------
+   the tools are round iron buttons, each its painted icon on the frame
+   (both backgrounds, at the top, so ::before stays the hint's halo and
+   ::after the name); Undo turn the U-turn on one, beside End turn on its
+   crimson plate with the bell; the buttons a field offers on the menu's
+   iron plate, the one to press on the crimson; Back the gold arrow, Close
+   the iron X. The art is UI_ART, set as --ui-* at the start */
+.g-tools .icon{padding:52px 0 0;border:0;border-radius:0;
+  background:var(--ico,none) center 7px / 36px 36px no-repeat, var(--ui-round) center 0 / 50px 50px no-repeat}
+.g-tools .icon > svg{display:none}
+.g-tools .icon:hover{background-color:transparent;color:var(--bone);filter:brightness(1.15)}
+#btn-edit{--ico:var(--ui-edit)} #btn-hint{--ico:var(--ui-hint)} #btn-restart{--ico:var(--ui-restart)}
+#btn-rules{--ico:var(--ui-rules)} #btn-sound{--ico:var(--ui-sound)}
+/* muted: a red stroke across the horn */
+.g-tools .icon.sound:not([data-on]){background:
+  linear-gradient(135deg,transparent calc(50% - 2px),#c0392b calc(50% - 2px) calc(50% + 2px),transparent calc(50% + 2px)) center 10px / 30px 30px no-repeat,
+  var(--ico) center 7px / 36px 36px no-repeat, var(--ui-round) center 0 / 50px 50px no-repeat}
+.g-tools .hintbtn .hintn{right:auto;left:calc(50% + 13px);top:-3px}
+/* the opened field's halo: a ring round the frame, so the lamp stays in sight */
+.g-tools .hintbtn.open::before{top:-7px;width:64px;height:64px;margin-left:-32px;
+  background:radial-gradient(closest-side,rgba(240,190,70,0) 74%,rgba(240,190,70,.9) 82%,rgba(217,166,43,.35) 90%,rgba(217,166,43,0))}
+#btn-restart.armed{filter:drop-shadow(0 0 6px rgba(190,59,45,.9))}
+/* Undo turn (the turn put back as it began; Reset turn until Version 229) */
+.btn.reset{flex:0 0 62px;padding:0;border:0;background:none;gap:3px}
+.btn.reset svg{display:none}
+.btn.reset::before{content:"";width:46px;height:46px;background:var(--ui-undo) center / 34px 34px no-repeat, var(--ui-round) center / contain no-repeat}
+.btn.reset::after{content:"Undo turn";white-space:nowrap}
+.btn.reset:hover:not(:disabled){filter:brightness(1.15)}
+/* End turn: the crimson plate, its bell at the left end. Lit when it is the
+   thing to press (key), quieter when something else is */
+.btn.end,.btn.end.key{position:relative;min-width:170px;min-height:56px;padding:6px 4px 6px 26px;border-radius:0;
+  border-style:solid;border-width:0 40px;border-color:transparent;border-image:var(--ui-end) 0 150 fill / 0 40px stretch;
+  background:none;color:#f4e3bf;box-shadow:none;filter:saturate(.7) brightness(.82)}
+.btn.end.key{filter:drop-shadow(0 0 7px rgba(190,40,40,.45))}
+.btn.end::before{content:"";position:absolute;left:-10px;top:50%;width:30px;height:30px;translate:0 -50%;
+  background:var(--ui-bell) center / contain no-repeat}
+.btn.end:hover:not(:disabled),.btn.end.key:hover:not(:disabled){background:none;color:#fff;border-color:transparent}
+.btn.end.dead:disabled{opacity:1;color:#e9cfc9;background:none;border-color:transparent;box-shadow:none;filter:saturate(.35) brightness(.62)}
+/* what the bar offers (Strike, Cancel, Next field, Replay, The March) */
+.bar-btns .btn:not(.slim){min-height:52px;padding:6px 2px;border-radius:0;border-style:solid;border-width:0 24px;border-color:transparent;
+  border-image:var(--menu-plate) 0 172 fill / 0 24px stretch;background:none;color:var(--bone);box-shadow:none}
+.bar-btns .btn.key:not(.slim){border-image:var(--ui-end) 0 150 fill / 0 24px stretch;color:#f4e3bf;
+  filter:drop-shadow(0 0 6px rgba(190,40,40,.4))}
+.bar-btns .btn:not(.slim):hover:not(:disabled){background:none;border-color:transparent;color:#fff}
+/* Back: the game's own a round button with the gold arrow; the screens'
+   Back bar the iron plate with it beside its word */
+#btn-back{width:42px;height:42px;border-radius:0;background:var(--ui-back) center / 24px 24px no-repeat, var(--ui-round) center / contain no-repeat}
+#btn-back > svg{display:none}
+#btn-back:hover{background-color:transparent;filter:brightness(1.15)}
+.scr-head .back{border-style:solid;border-width:0 34px;border-color:transparent;border-image:var(--menu-plate) 0 172 fill / 0 34px stretch;
+  background:none;color:var(--bone);min-height:44px;padding:0 6px;gap:8px;border-radius:0}
+.scr-head .back > svg{display:none}
+.scr-head .back::before{content:"";width:22px;height:22px;flex:none;background:var(--ui-back) center / contain no-repeat}
+.scr-head .back:hover{background:none;color:#fff}
+@media not all and (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
+  .screen > .scr-head .back{max-width:300px;min-height:52px;padding:0 10px;font-size:14px;border:0 solid transparent;border-width:0 40px;
+    border-image:var(--menu-plate) 0 172 fill / 0 40px stretch;background:none}
+  .screen > .scr-head .back::before{width:26px;height:26px}
+}
+/* Close: the iron X on a round button */
+.sheet .sheet-x #btn-x{width:44px;height:44px;border:0;background:var(--ui-close) center / 24px 24px no-repeat, var(--ui-round) center / contain no-repeat}
+.sheet .sheet-x #btn-x > svg{display:none}
+.sheet .sheet-x #btn-x:hover{filter:brightness(1.15)}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -2347,7 +2410,7 @@ html,body{overflow-x:hidden}
   </div>
 
   <div class="bar-act">
-    <button class="btn reset" id="btn-reset" aria-label="Reset this turn" hidden><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5.4 13.2a6.8 6.8 0 1 0 1.9-6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M6.6 3.6v4h4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="btn reset" id="btn-reset" aria-label="Undo this turn" hidden><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5.4 13.2a6.8 6.8 0 1 0 1.9-6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M6.6 3.6v4h4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <div class="bar-btns" id="btns"></div>
     <button class="btn end" id="btn-end">End turn</button>
   </div>
@@ -2529,7 +2592,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 228;
+const VERSION = "1.0", BUILD = 229;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -5134,6 +5197,23 @@ function marked(text){
 /* the same text in words, where a picture cannot go */
 const unmarked = text => String(text || "").replace(MARK_RE, (_, k, n) => MARK_SAY[k] + " " + n);
 
+/* the game screen's own painted controls (pass 65, the owner's picks): a
+   round iron button for each tool, darkened inside its rim, their icons (the
+   lantern, the arrow round, the book, the horn; Undo turn's U-turn), End
+   turn's crimson plate and its bell, and Back's gold arrow and Close's iron
+   X. Set as CSS variables at the start (--ui-*) */
+const UI_ART = {
+  round:"../assets/img/UI_ART_round_1fa9.webp",
+  hint:"../assets/img/UI_ART_hint_9a93.webp",
+  restart:"../assets/img/UI_ART_restart_2f75.webp",
+  rules:"../assets/img/UI_ART_rules_2bca.webp",
+  sound:"../assets/img/UI_ART_sound_3cd9.webp",
+  undo:"../assets/img/UI_ART_undo_ea3f.webp",
+  bell:"../assets/img/UI_ART_bell_20f6.webp",
+  back:"../assets/img/UI_ART_back_9230.webp",
+  close:"../assets/img/UI_ART_close_cd70.webp",
+  end:"../assets/img/UI_ART_end_c0d1.webp"
+};
 const MENU_ICONS = {
   march:"../assets/img/MENU_ICONS_march_54b9.webp",
   tutorial:"../assets/img/MENU_ICONS_tutorial_e874.webp",
@@ -11362,6 +11442,8 @@ const App = (() => {
     if(MENU_ART) document.documentElement.style.setProperty("--menu-art", "url(" + MENU_ART + ")");
     document.documentElement.style.setProperty("--menu-paint", "url(" + MENU_PAINT + ")");
     document.documentElement.style.setProperty("--menu-plate", "url(" + MENU_PLATE + ")");
+    for(const k in UI_ART) document.documentElement.style.setProperty("--ui-" + k, "url(" + UI_ART[k] + ")");
+    document.documentElement.style.setProperty("--ui-edit", "url(" + MENU_ICONS.editor + ")");
     el("screen-run").style.setProperty("--map-tall", "url(" + MARCH_MAP.tall + ")");
     el("screen-run").style.setProperty("--map-wide", "url(" + MARCH_MAP.wide + ")");
     for(const m in MARCH_FIELD_MAPS) el("screen-run").style.setProperty("--fmap" + m, "url(" + MARCH_FIELD_MAPS[m].img + ")");
