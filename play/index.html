@@ -1534,13 +1534,14 @@ html,body{overflow-x:hidden}
 /* over the backdrop the crest's own dark ground drops out, leaving the helm, lance and skull */
 #screen-menu .crest-art{mix-blend-mode:lighten}
 /* the helm and the skull, the menu's crest before the crowned skull, at the foot of Settings */
-.crest-art.set-crest{width:min(40vw,150px,calc(var(--screen) * .13));margin:12px auto 0;mix-blend-mode:lighten;flex:none}
+.crest-art.set-crest{width:min(28vw,108px,calc(var(--screen) * .1));margin:10px auto 0;mix-blend-mode:lighten;flex:none}
 /* a short phone (an iPhone SE): Settings drops the crest and the rows' lines to fit one screen */
 @media not all and (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
   @media (max-height: 700px){
     .crest-art.set-crest{display:none}
     #screen-settings .srow .sd{display:none}
     #screen-settings .srow{padding:10px 12px}
+    #screen-settings .srow.vol{padding-top:4px;padding-bottom:4px}
   }
 }
 .menu-side,.scr-side{display:none}
@@ -1887,6 +1888,9 @@ html,body{overflow-x:hidden}
 .spair .srow .stext{flex:none}
 .spair .srow .sd{display:none}
 .spair .srow button{width:100%;margin:0}
+/* Support and the privacy policy: two quiet links under the rows */
+.shelp{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.shelp button{margin:0;padding:9px 8px;font-size:12px}
 /* ---------- achievements ----------
    One row each, the medallion and what it asks. Won: lit, in gold. Not
    yet: the medallion greyed. A secret not yet won shows nothing of itself:
@@ -1915,7 +1919,7 @@ html,body{overflow-x:hidden}
 .srow .sd:empty{display:none}
 .sslider{flex:1 1 150px;min-width:0;accent-color:var(--gold);height:28px}
 /* a volume row: the name, then the mute and the slider together */
-.srow.vol{flex-wrap:nowrap}
+.srow.vol{flex-wrap:nowrap;padding-top:7px;padding-bottom:7px}
 .srow.vol .stext{flex:0 0 auto}
 .srow.vol .mute{flex:none;color:var(--gold)}
 .srow.vol.off .mute{color:var(--bone-dim)}
@@ -2462,7 +2466,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 215;
+const VERSION = "1.0", BUILD = 216;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -11285,6 +11289,7 @@ const App = (() => {
   }
   const NUMBER_WORD = n => ["No", "One", "Two", "Three", "Four", "Five", "Six"][n] || String(n);
 
+  const SITE = "https://pa-az.github.io/crown-and-crypt-site/";
   function renderSettings(){
     const box = el("set-list");
     box.textContent = "";
@@ -11392,6 +11397,13 @@ const App = (() => {
     box.appendChild(pair);
     forget("Forget the tutorial", "Its seven fields start over.", () => { Progress.forget(); Met.forget(); }, pair);
     forget("Forget the march", "Locks the road again and clears its stars and hints.", () => { March.forget(); Stars.forget(); Hints.forget(); }, pair);
+    /* Apple asks for the privacy policy inside the app (5.1.1(i)): the site's
+       support and privacy pages, never its home (it names the paid road) */
+    const help = document.createElement("div");
+    help.className = "shelp";
+    for(const [label, page] of [["Support", "support"], ["Privacy policy", "privacy"]])
+      help.appendChild(btn(label, () => window.open(SITE + page + ".html", "_blank"), "ghost"));
+    box.appendChild(help);
     mouseWords(box);
   }
 
