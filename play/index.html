@@ -1603,8 +1603,13 @@ html,body{overflow-x:hidden}
   #screen-menu::before{display:none}
   #screen-menu .menu-fog{height:100%}
   #screen-menu .menu-skull{visibility:hidden}
-  .menu-paint{display:block;position:absolute;top:0;bottom:0;left:calc(50% - 50vw);right:calc(50% - 50vw);z-index:-1;overflow:hidden;pointer-events:none}
-  .menu-paint .pic{position:absolute;left:50%;top:0;width:max(100%, calc(var(--screen) * 1536 / 2752));aspect-ratio:1536/2752;
+  /* fixed, so it reaches under the status bar and the home indicator (the
+     owner saw black bars there): the painting starts where the page does,
+     the strip above it its sky's own colour, and it runs on under the foot */
+  .menu-paint{display:block;position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;
+    background:linear-gradient(#1C1F2A 0 50%,#1D1F1F 50% 100%)}
+  .menu-paint .pic{position:absolute;left:50%;top:env(safe-area-inset-top, 0px);
+    width:max(100%, calc((var(--screen) + env(safe-area-inset-bottom, 0px)) * 1536 / 2752));aspect-ratio:1536/2752;
     translate:-50% 0;background:var(--menu-paint,none) center/100% 100% no-repeat;filter:brightness(.92);
     transform-origin:50% 0;animation:paintpush 40s ease-in-out infinite alternate}
   /* the skull's eyes: the painting's own red taken out, so these alone show,
@@ -2059,8 +2064,10 @@ html,body{overflow-x:hidden}
     -webkit-mask:linear-gradient(#000 78%,transparent 100%);mask:linear-gradient(#000 78%,transparent 100%)}
   .menu-side.l{left:calc((50% - var(--half)) / 2);translate:-50% 0}
   .menu-side.r{right:calc((50% - var(--half)) / 2);translate:50% 0}
-  #screen-menu::before{filter:brightness(.72) saturate(.9);
-    -webkit-mask:linear-gradient(#000 64%,transparent 100%);mask:linear-gradient(#000 64%,transparent 100%)}
+  /* the keep and the tarn, faded as the website has it (brightness .62) */
+  #screen-menu::before{background-position:center 30%;filter:brightness(.62) saturate(.9);
+    -webkit-mask:linear-gradient(#000 70%,transparent 100%);mask:linear-gradient(#000 70%,transparent 100%)}
+  #screen-run::before,#screen-tutorial::before,#screen-settings::before,#screen-ach::before{background-image:var(--menu-art,none);background-position:center 30%;filter:brightness(.3) saturate(.85)}
   #screen-menu .menu-top{padding-top:0;gap:0}
   #screen-menu .crest-art{width:clamp(150px,33vh,400px);margin-bottom:-1.5vh}
   #screen-menu .menu-skull{--sk:clamp(140px,30vh,340px)}
@@ -2517,7 +2524,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 221;
+const VERSION = "1.0", BUILD = 222;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -5053,11 +5060,13 @@ const GATE_ART = (hp, j, look) => {
    image's own edge cut off square and showed as a box */
 const MENU_SIDES = {l:"../assets/img/MENU_SIDES_997d96fb0e.webp",
   r:"../assets/img/MENU_SIDES_r_4091.webp"};
-const MENU_ART = "../assets/img/MENU_ART_daa0dd99d2.webp";
+/* held wide: the keep and the tarn at night (pass 62, the website's painting too,
+   Version 222), behind the menu and the inner screens' band */
+const MENU_ART = "../assets/img/MENU_ART_2c2ead6f1b.webp";
 /* the menu on a phone (pass 58, Version 220, the owner's pick): one upright
    painting, the knights' camp and the dead's across a misty valley under a
    vast crowned skull in the fog, its eyes drawn over it (.menu-paint); the
-   inner screens carry it too, darkened. Held wide the menu keeps MENU_ART */
+   inner screens carry it too, darkened. Held wide the menu is MENU_ART */
 const MENU_PAINT = "../assets/img/MENU_PAINT_58eacd6c88.webp";
 /* the menu's buttons: a black iron plate with gold trim (pass 60), its ends
    kept and its middle stretched (border-image) */
@@ -11284,7 +11293,7 @@ const App = (() => {
   function drawCrest(){
     if(SCREEN_ART) document.documentElement.style.setProperty("--screen-art", "url(" + SCREEN_ART + ")");
     if(FRAME_ART) document.documentElement.style.setProperty("--frame-art", "url(" + FRAME_ART + ")");
-    if(MENU_ART) el("screen-menu").style.setProperty("--menu-art", "url(" + MENU_ART + ")");
+    if(MENU_ART) document.documentElement.style.setProperty("--menu-art", "url(" + MENU_ART + ")");
     document.documentElement.style.setProperty("--menu-paint", "url(" + MENU_PAINT + ")");
     document.documentElement.style.setProperty("--menu-plate", "url(" + MENU_PLATE + ")");
     el("screen-run").style.setProperty("--map-tall", "url(" + MARCH_MAP.tall + ")");
