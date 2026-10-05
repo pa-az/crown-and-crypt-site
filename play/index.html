@@ -1537,6 +1537,10 @@ html,body{overflow-x:hidden}
 .crest-art.set-crest{width:min(44vw,170px,calc(var(--screen) * .16));margin:-8px auto 0;flex:none}
 /* a short phone (an iPhone SE): Settings drops the crest and the rows' lines to fit one screen */
 @media not all and (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
+  /* on a phone the crest fills the room between the last row and the Back
+     button at the foot (98 px of the screen's padding, the button's 60 of it),
+     drawn as large as fits and centred there */
+  .crest-art.set-crest{flex:1 1 0;min-height:0;width:100%;max-height:200px;margin:-8px 0 -38px;padding:6px 0;object-fit:contain;box-sizing:border-box}
   @media (max-height: 700px){
     .crest-art.set-crest{display:none}
     #screen-settings .srow .sd{display:none}
@@ -2466,7 +2470,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 218;
+const VERSION = "1.0", BUILD = 219;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
