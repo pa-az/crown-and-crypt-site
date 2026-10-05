@@ -1534,7 +1534,7 @@ html,body{overflow-x:hidden}
 /* over the backdrop the crest's own dark ground drops out, leaving the helm, lance and skull */
 #screen-menu .crest-art{mix-blend-mode:lighten}
 /* the helm and the skull, the menu's crest before the crowned skull, at the foot of Settings */
-.crest-art.set-crest{width:min(28vw,108px,calc(var(--screen) * .1));margin:10px auto 0;mix-blend-mode:lighten;flex:none}
+.crest-art.set-crest{width:min(44vw,170px,calc(var(--screen) * .16));margin:-8px auto 0;mix-blend-mode:lighten;flex:none}
 /* a short phone (an iPhone SE): Settings drops the crest and the rows' lines to fit one screen */
 @media not all and (min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px){
   @media (max-height: 700px){
@@ -2466,7 +2466,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 216;
+const VERSION = "1.0", BUILD = 217;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -11360,7 +11360,7 @@ const App = (() => {
       "Show a knight's targets as soon as it moves.",
       () => Settings.on("aim"), v => Settings.set("aim", v));
     choice("Deaths",
-      "Fast is a short fall for everyone, for a quicker game.",
+      "Fast is a short fall, for a quicker game.",
       [["full","Full"], ["fast","Fast"]],
       () => Settings.get("deaths"), v => Settings.set("deaths", v));
     /* on a computer (the desktop build): the window or the whole screen. The
