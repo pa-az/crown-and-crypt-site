@@ -2185,6 +2185,16 @@ html,body{overflow-x:hidden}
 .bar-btns .btn.key:not(.slim){border-image:var(--ui-end) 0 150 fill / 0 24px stretch;color:#f4e3bf;
   filter:drop-shadow(0 0 6px rgba(190,40,40,.4))}
 .bar-btns .btn:not(.slim):hover:not(:disabled){background:none;border-color:transparent;color:#fff}
+/* while the bar offers something (Strike, Undo move, Cancel), End turn gives
+   up its width and all of them share the row: at 170 px it ran off the
+   phone's edge beside three others (Version 230) */
+@media not ((min-aspect-ratio: 5/4) and (min-width: 900px) and (min-height: 500px)){
+  .bar-act,.bar-act .bar-btns{gap:5px}
+  .bar-act .bar-btns{min-width:0}
+  .bar-btns .btn:not(.slim){flex:1 1 0;min-width:0;border-width:0 16px;padding-inline:0;font-size:11px;letter-spacing:.05em}
+  .bar-btns .btn.slim{flex:0 0 54px;min-width:0;padding:6px 4px;font-size:10.5px;white-space:normal;line-height:1.15}
+  .bar-btns:not(:empty) + .btn.end{min-width:0;flex:0 0 auto;border-width:0 22px;padding:6px 0 6px 20px;font-size:11px;letter-spacing:.04em}
+}
 /* Back: the game's own a round button with the gold arrow; the screens'
    Back bar the iron plate with it beside its word */
 #btn-back{width:42px;height:42px;border-radius:0;background:var(--ui-back) center / 24px 24px no-repeat, var(--ui-round) center / contain no-repeat}
@@ -2592,7 +2602,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 229;
+const VERSION = "1.0", BUILD = 230;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
