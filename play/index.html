@@ -1154,6 +1154,11 @@ h1{
 /* a kind of unit met for the first time */
 .desc.newu{margin-top:5px}
 .desc.newu b{color:var(--gold);font-weight:600}
+.desc.starsln{margin-top:5px;font-size:12px;letter-spacing:.02em}
+/* the sheet's own way to forget: red, apart from Cancel */
+.sheet-btns .btn.danger{color:var(--madder-lit);border-color:rgba(190,59,45,.7)}
+.desc.starsln .st{color:var(--gold);margin-left:4px}
+.desc.starsln .st:first-child{margin-left:0}
 .bar-btns{display:flex;gap:7px}
 /* the turn ends from one button that never moves and never goes away, whatever
    else the bar is offering */
@@ -1632,7 +1637,10 @@ html,body{overflow-x:hidden}
 @media (prefers-reduced-motion: reduce){ .menu-paint .pic,.menu-paint .eye{animation:none} }
 .crest-art[hidden],.board.crest[hidden]{display:none}
 /* the title lockup sits under the painted knight-and-crowned-skeleton crest */
-.menu-title{margin-top:0;line-height:0;position:relative;z-index:1}
+/* the title stands over the first button by its empty foot; it takes no
+   taps, or on a short phone (360 by 640) The March would not open
+   (Version 231, found on Android's emulator) */
+.menu-title{margin-top:0;line-height:0;position:relative;z-index:1;pointer-events:none}
 /* the crowned skull stands over the title, which covers its fading cloak; its
    eyes flare and dim once in four seconds, as in the owner's loop */
 .menu-skull{--sk:min(54vw,220px);position:relative;width:var(--sk);aspect-ratio:5/7;margin-bottom:calc(var(--sk) * -.5);pointer-events:none}
@@ -2128,12 +2136,16 @@ html,body{overflow-x:hidden}
      Achievements, dimmed and behind them (the owner's word, Version 178);
      each is centred in the room beside the page, and the rows take a darker
      ground so they read over a figure that reaches under them */
+  /* the room beside the screen's 944 px column (472 a side), less 16 px:
+     the figure stands no wider than it, centred in it. Measured from 640 px
+     until Version 231, when the screens had long been wider and the figures
+     stood half off the window (the website, the owner's word) */
   .scr-side{display:block;position:fixed;bottom:0;z-index:-1;pointer-events:none;
-    height:min(86vh, calc((50vw - 320px) / .56));filter:brightness(.5) saturate(.85);
+    height:min(86vh, calc((50vw - 488px) / .56));filter:brightness(.5) saturate(.85);
     -webkit-mask:linear-gradient(#000 72%,transparent 100%);mask:linear-gradient(#000 72%,transparent 100%)}
-  .scr-side.l{left:calc(25vw - 260px);translate:-50% 0}
-  .scr-side.r{right:calc(25vw - 260px);translate:50% 0}
-  @media (max-width:1180px){ .scr-side{display:none} }
+  .scr-side.l{left:calc(25vw - 236px);translate:-50% 0}
+  .scr-side.r{right:calc(25vw - 236px);translate:50% 0}
+  @media (max-width:1375.98px){ .scr-side{display:none} }
 
   #screen-ach .arow .at{font-size:16px}
   #screen-ach .arow .ad{font-size:14px}
@@ -2163,6 +2175,10 @@ html,body{overflow-x:hidden}
 .g-tools .hintbtn.open::before{top:-7px;width:64px;height:64px;margin-left:-32px;
   background:radial-gradient(closest-side,rgba(240,190,70,0) 74%,rgba(240,190,70,.9) 82%,rgba(217,166,43,.35) 90%,rgba(217,166,43,0))}
 #btn-restart.armed{filter:drop-shadow(0 0 6px rgba(190,59,45,.9))}
+/* a hint asked for once glows gold until the second tap spends it, as the
+   restart asked for once glows red (the check drawn in it was hidden by the
+   painted icon since Version 229) */
+#btn-hint.asking{filter:drop-shadow(0 0 6px rgba(240,190,70,.95)) drop-shadow(0 0 2px rgba(240,190,70,.8))}
 /* Undo turn (the turn put back as it began; Reset turn until Version 229) */
 .btn.reset{flex:0 0 62px;padding:0;border:0;background:none;gap:3px}
 .btn.reset svg{display:none}
@@ -2194,6 +2210,10 @@ html,body{overflow-x:hidden}
   .bar-btns .btn:not(.slim){flex:1 1 0;min-width:0;border-width:0 16px;padding-inline:0;font-size:11px;letter-spacing:.05em}
   .bar-btns .btn.slim{flex:0 0 54px;min-width:0;padding:6px 4px;font-size:10.5px;white-space:normal;line-height:1.15}
   .bar-btns:not(:empty) + .btn.end{min-width:0;flex:0 0 auto;border-width:0 22px;padding:6px 0 6px 20px;font-size:11px;letter-spacing:.04em}
+  /* on a phone End turn stands at the left and Undo turn at the right (the
+     owner's word, Version 231); held wide they keep their places */
+  .bar-act .btn.end{order:-1}
+  .bar-act .btn.reset{order:1}
 }
 /* Back: the game's own a round button with the gold arrow; the screens'
    Back bar the iron plate with it beside its word */
@@ -2586,7 +2606,7 @@ html,body{overflow-x:hidden}
       <div><b></b><span>Every knight still standing, or on a few fields a win by an earlier turn or with one knight lost at most</span></div>
       <div><b></b><span>Win fast, or on a Hold field keep every town</span></div>
     </div>
-    <p class="htp-win">Each star counts on its own. Fast means by the field's par turn: miss it and the win tells you the turn to beat.</p>
+    <p class="htp-win">Each star counts on its own. Fast means by the field's par turn. What each star asks stands under the goal while you play.</p>
     <p class="htp-win"><b>Hints</b> show you a winning turn, two for each march. Spend one on a field and its hints stay free, but a win with a hint earns only the first star. In the tutorial they are always free.</p>
 
   </div>
@@ -2602,7 +2622,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 230;
+const VERSION = "1.0", BUILD = 231;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -4821,18 +4841,22 @@ const Engine = (() => {
        `all` stays what it says, for the achievements that ask for it */
     const second = s.def.fast ? s.turn <= s.def.fast
       : s.def.spare ? standing.length >= s.roster.length - s.def.spare : all;
+    const {secondWhy, thirdWhy} = starsWhy(s);
+    const third = s.def.win === "survive"
+      ? (s.townMax > 0 ? s.town === s.townMax : standing.every(u => u.hp >= u.maxHp))
+      : !!s.def.par && s.turn <= s.def.par;
+    return {n:1 + (second ? 1 : 0) + (third ? 1 : 0), all, second, secondWhy, third, thirdWhy};
+  }
+  /* what the second and third stars ask, in words: said when a field is won,
+     and under the goal while the field is played (a tester's word,
+     2026-10-05: the targets were found out only at the end) */
+  function starsWhy(s){
     const secondWhy = s.def.fast ? "won by turn " + s.def.fast
       : s.def.spare ? "no more than " + (s.def.spare === 1 ? "one knight" : s.def.spare + " knights") + " lost"
       : "every knight standing";
-    let third, thirdWhy;
-    if(s.def.win === "survive"){
-      third = s.townMax > 0 ? s.town === s.townMax : standing.every(u => u.hp >= u.maxHp);
-      thirdWhy = s.townMax > 0 ? "every town still whole" : "every knight unhurt";
-    } else {
-      third = !!s.def.par && s.turn <= s.def.par;
-      thirdWhy = s.def.par ? "won by turn " + s.def.par : "";
-    }
-    return {n:1 + (second ? 1 : 0) + (third ? 1 : 0), all, second, secondWhy, third, thirdWhy};
+    const thirdWhy = s.def.win === "survive" ? (s.townMax > 0 ? "every town still whole" : "every knight unhurt")
+      : s.def.par ? "won by turn " + s.def.par : "";
+    return {secondWhy, thirdWhy};
   }
 
   /* ---------- achievements (the owner's list, 2026-09-27) ----------
@@ -4964,7 +4988,7 @@ const Engine = (() => {
     return /^(127\.0\.0\.1|localhost|\[::1\]|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+)$/.test(o.host || "");
   }
 
-  return {W, H, DIRS, TYPES, MISSIONS, MARCH, MARCHES, GRAVES, graveKind, GATE_HITS, WALL_HITS, passable,
+  return {W, H, DIRS, TYPES, MISSIONS, MARCH, MARCHES, GRAVES, graveKind, GATE_HITS, WALL_HITS, RISEN_HP, starsWhy, passable,
     FULL_ROAD, marchGates, roadFree,
     ACHIEVEMENTS, achBlow, achBefore, achMove, achWin, achProgress,
     createMission, reachable, moveUnit, computeHits, legalTargets, performAttack, forecast,
@@ -8032,7 +8056,6 @@ function renderBar(){
         elBtns.appendChild(btn("The March", () => App.show("run")));
       } else if(won){
         elBtns.appendChild(btn("The March", () => App.show("run"), "key"));
-        elBtns.appendChild(btn("Replay", () => start()));
       } else {
         elBtns.appendChild(btn("Try again", () => start(), "key"));
         elBtns.appendChild(btn("The March", () => App.show("run")));
@@ -8041,9 +8064,10 @@ function renderBar(){
     }
     if(tut && won && more){
       elBtns.appendChild(btn("Next field", () => start(missionIdx + 1), "key"));
-      elBtns.appendChild(btn("Replay", () => start(missionIdx)));
+    } else if(tut && won){
+      elBtns.appendChild(btn("Tutorial", () => App.show("tutorial"), "key"));
     } else if(tut){
-      elBtns.appendChild(btn(won ? "Replay" : "Try again", () => start(missionIdx), "key"));
+      elBtns.appendChild(btn("Try again", () => start(missionIdx), "key"));
       elBtns.appendChild(btn("Tutorial", () => App.show("tutorial")));
     } else {
       elBtns.appendChild(btn("Try again", () => start(), "key"));
@@ -8148,10 +8172,18 @@ function renderBar(){
        the one way to lose that the goal does not say */
     const how = brief || (ctx.kind === "run" ? (S.townMax > 0 ? "Lose every town and you lose the field." : "") : goalHow());
     elInfo.innerHTML = '<div><div class="who goal">' + goalLine() + '</div>' +
-      (how ? '<div class="desc">' + marked(how) + '</div>' : '') +
+      (how ? '<div class="desc">' + marked(how) + '</div>' : '') + starsLine() +
       Met.fresh(S, brief).map(t => '<div class="desc newu"><b>New: ' + T[t].name + '.</b> ' + marked(T[t].note) + '</div>').join("") +
       '</div>';
   }
+}
+/* the stars a field gives, under its goal while nothing is in hand. Not on a
+   field of the player's own or under test, which bank none */
+function starsLine(){
+  if(ctx.kind !== "run" && ctx.kind !== "tutorial") return "";
+  if(S.hinted && !S.def.tut) return '<div class="desc starsln"><span class="st">&#9733;</span> A hint was used: a win here earns one star.</div>';
+  const w = E.starsWhy(S), say = ["win"].concat(w.secondWhy, w.thirdWhy || []);
+  return '<div class="desc starsln">' + say.map(t => '<span class="st">&#9733;</span> ' + t).join(" ") + '</div>';
 }
 
 function render(){ renderTiles(); renderMarks(); renderUnits(); renderHud(); renderBar(); mirrorFace(); renderHintBtn(); mouseWords(elInfo);
@@ -8658,12 +8690,16 @@ function fillGround(){
     box.appendChild(row);
   }
 }
+/* the risen ghoul is a Ghoul with its own painting and less health, so it
+   has a card of its own here though TYPES knows it only as a Ghoul */
+const RISEN_CARD = {name:"Risen Ghoul", note:"Climbs out of a Grave Priest's mark. A Ghoul in all but its health."};
 function fillRoster(id, keys){
   const box = document.getElementById(id);
   box.innerHTML = keys.map(k => {
-    const t = T[k];
+    const risen = k === "risen", type = risen ? "ghoul" : k;
+    const t = risen ? Object.assign({}, T.ghoul, RISEN_CARD, {hp:E.RISEN_HP}) : T[k];
     return '<div class="rost"><div class="face ' + t.side + '">' + unitGlyph(k) + '</div>' +
-      '<div><div class="t">' + t.name + '  <span>' + marked("[health " + t.hp + (t.side === "knight" ? "]" : " dead]")) + "</span>" + statRow({type:k, side:t.side}) + '</div>' +
+      '<div><div class="t">' + t.name + '  <span>' + marked("[health " + t.hp + (t.side === "knight" ? "]" : " dead]")) + "</span>" + statRow({type, side:t.side}) + '</div>' +
       '<div class="d">' + marked(t.note) + '</div></div></div>';
   }).join("");
 }
@@ -8677,7 +8713,7 @@ const fillRosters = () => {
     m.innerHTML = marked(m.dataset.mk);
   }
   fillRoster("roster-k", ["lancer","longbow","crossbow","billhook","chaplain","catapult","trebuchet"]);
-  fillRoster("roster-u", ["ghoul","bonearcher","mantlet","slinger","priest","witch","boneking"]);
+  fillRoster("roster-u", ["ghoul","bonearcher","mantlet","slinger","priest","risen","witch","boneking"]);
   fillGround();
 };
 fillRosters();
@@ -11304,16 +11340,18 @@ const App = (() => {
     all.forEach((m, i) => {
       const done = m.fields.length > 0 && m.won === m.fields.length;
       const row = document.createElement("button");
-      /* a march not bought yet: its lock carries the price, and a tap offers it */
-      const buy = !m.paid;
+      /* a march not bought yet: a tap offers the full road. One purchase opens
+         every march still to buy, so only the first of them carries the price,
+         saying so, or two locks with a price each read as two to pay */
+      const buy = !m.paid, priced = buy && all.findIndex(o => !o.paid) === i;
       row.className = "msec s" + i + (m.open && !done && m.fields.length ? " on" : "") + (m.open ? " open" : " locked") + (buy ? " buy" : "");
       if(!(m.open && m.fields.length || buy)){ row.disabled = true; row.setAttribute("aria-label", m.name + ", locked"); }
       row.innerHTML = '<span class="mplate"><span class="mt"></span><span class="msub"></span><span class="md"></span>' +
         (m.fields.length ? '<span class="mpips">' + m.fields.map(f => '<i' + (March.isWon(f.key) ? ' class="won"' : '') + '></i>').join("") + '</span>' : '') +
         '</span>' +
         (done ? '<span class="cleared">Won</span>' : m.open ? "" : '<span class="lockp"><span class="lock">' + LOCK + '</span>' +
-          (buy && Unlock.price() ? '<span class="price"></span>' : '') + '</span>');
-      if(row.querySelector(".price")) row.querySelector(".price").textContent = Unlock.price();
+          (priced && Unlock.price() ? '<span class="price"></span>' : '') + '</span>');
+      if(row.querySelector(".price")) row.querySelector(".price").textContent = Unlock.price() + (all.filter(o => !o.paid).length > 1 ? " for both" : "");
       row.querySelector(".mt").textContent = m.name;
       row.querySelector(".msub").textContent = MARCH_SUBS[i] || "";
       row.querySelector(".md").textContent = buy && m.earned ? "Ready when you are"
@@ -11600,18 +11638,16 @@ const App = (() => {
       toggle("Fullscreen", "", () => full, v => { full = v; window.crownDesktop.fullscreen(v); });
     }
 
-    /* two taps to forget, the second within a moment of the first */
-    const forget = (title, note, what, into) => {
+    /* Forget asks first, in a sheet that says what goes (a tester's word,
+       2026-10-05: the inline Sure? read as too easy to pass by) */
+    const forget = (title, note, gone, what, into) => {
       const d = row(title, note, "danger", into);
-      let sure = false;
       const b = btn("Forget", () => {
-        if(!sure){ sure = true; b.textContent = "Sure?"; b.classList.add("armed");
-          setTimeout(() => { if(sure){ sure = false; b.textContent = "Forget"; b.classList.remove("armed"); } }, 2600); return; }
-        sure = false;
-        what();
-        b.textContent = "Forgotten";
-        b.classList.remove("armed");
-        b.disabled = true;
+        popSheet(title, '<h2>' + title + '?</h2><p>' + gone() + '</p>', [["Cancel", null], ["Forget", () => {
+          what();
+          b.textContent = "Forgotten";
+          b.disabled = true;
+        }, "danger"]]);
       }, "danger");
       d.appendChild(b);
     };
@@ -11625,8 +11661,13 @@ const App = (() => {
     const pair = document.createElement("div");
     pair.className = "spair";
     box.appendChild(pair);
-    forget("Forget the tutorial", "Its seven fields start over.", () => { Progress.forget(); Met.forget(); }, pair);
-    forget("Forget the march", "Locks the road again and clears its stars and hints.", () => { March.forget(); Stars.forget(); Hints.forget(); }, pair);
+    forget("Forget the tutorial", "Its seven fields start over.",
+      () => "Your wins on the tutorial's seven fields go, and it starts over from the first. This cannot be undone.",
+      () => { Progress.forget(); Met.forget(); }, pair);
+    forget("Forget the march", "Locks the road again and clears its stars and hints.",
+      () => "Your wins, stars and hints on the road go, and it locks again from its first field." +
+        (Unlock.owned() ? " The full road stays bought." : "") + " This cannot be undone.",
+      () => { March.forget(); Stars.forget(); Hints.forget(); }, pair);
     /* Apple asks for the privacy policy inside the app (5.1.1(i)): the site's
        support and privacy pages, never its home (it names the paid road) */
     const help = document.createElement("div");
@@ -11845,6 +11886,26 @@ const App = (() => {
   el("btn-back").onclick = () => {
     if(ctx.kind === "test") Editor.open();
     else show(ctx.kind === "tutorial" ? "tutorial" : ctx.kind === "run" ? "run" : "levels");
+  };
+  /* the phone's own Back (Android's button and gesture, through
+     MainActivity): it does what the screen's Back does, one step at a time,
+     a sheet or How to play first. Only on the menu does it hand back false,
+     and the app goes to the background (a tester's word, 2026-10-05: one
+     Back from a field closed the app) */
+  window.crownBack = () => {
+    const sheet = [...document.querySelectorAll(".scrim:not(#scrim)")].pop();
+    if(sheet){ sheet.remove(); return true; }
+    const rules = el("scrim");
+    if(!rules.hidden){ rules.hidden = true; return true; }
+    if(el("editor").hasAttribute("data-open")){ el("ed-close").click(); return true; }
+    if(current === "menu") return false;
+    if(current === "game"){
+      if(mode !== "idle" || sel != null){ mode = "idle"; pending = null; hold(null); render(); return true; }
+      el("btn-back").click(); return true;
+    }
+    const back = el("screen-" + current).querySelector(".back");
+    if(back) back.click(); else show("menu");
+    return true;
   };
   el("btn-edit").onclick = () => Editor.open();
   el("lv-new").onclick = () => Editor.open(null);
