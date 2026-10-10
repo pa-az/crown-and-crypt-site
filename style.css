@@ -45,7 +45,8 @@ a{color:var(--gold)} a:hover{color:#f0c55a}
   filter:brightness(.72) saturate(.82) drop-shadow(0 6px 12px rgba(0,0,0,.72))}
 .tag{font-size:clamp(18px,4.6vw,21px);max-width:540px;margin:4px auto 0;color:var(--ink);text-shadow:0 2px 10px rgba(0,0,0,.8)}
 .stores{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:24px 0 0}
-.stores span{background:rgba(16,18,21,.6);border:1px solid rgba(217,166,43,.35);border-radius:8px;padding:9px 15px;color:var(--ink);font-size:14px;letter-spacing:.04em;backdrop-filter:blur(4px)}
+.stores span,.stores a{background:rgba(16,18,21,.6);border:1px solid rgba(217,166,43,.35);border-radius:8px;padding:9px 15px;color:var(--ink);font-size:14px;letter-spacing:.04em;backdrop-filter:blur(4px)}
+.stores a{text-decoration:none}.stores a:hover{border-color:var(--gold)}
 .stores b{color:var(--gold);font-weight:700}
 
 nav{display:flex;justify-content:center;gap:22px;margin:22px 0 0;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:13px}
@@ -63,7 +64,7 @@ p{color:var(--body)}
 
 /* the game itself, in phone frames */
 .shots{display:flex;gap:18px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
-.phone{width:min(300px,86vw);border-radius:30px;padding:10px;background:linear-gradient(160deg,#2a2e33,#15171a);
+.phone{width:min(260px,86vw);border-radius:30px;padding:10px;background:linear-gradient(160deg,#2a2e33,#15171a);
   box-shadow:0 20px 50px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.06)}
 .phone img{border-radius:22px;width:100%}
 .phone figcaption{text-align:center;color:var(--dim);font-size:14px;padding:10px 6px 2px}
