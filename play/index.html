@@ -2622,7 +2622,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0", BUILD = 231;
+const VERSION = "1.0.1", BUILD = 233;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -2888,8 +2888,8 @@ const Engine = (() => {
     {march:2, level:"The Witchwood", field:{name:"The Witchwood", win:"clear", turns:0, biome:"heath", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
     {march:2, level:"The Charnel Ford", field:{name:"The Charnel Ford", win:"clear", turns:0, biome:"marsh", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
     {march:2, level:"The Unquiet Hall", field:{name:"The Unquiet Hall", win:"clear", turns:0, biome:"hall", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
-    {march:3, level:"The Throne of Bone", field:{name:"The Throne of Bone", win:"clear", turns:0, biome:"barrow", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
     {march:3, level:"The Black Tarn", field:{name:"The Black Tarn", win:"clear", turns:0, biome:"marsh", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
+    {march:3, level:"The Throne of Bone", field:{name:"The Throne of Bone", win:"clear", turns:0, biome:"barrow", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
     {march:3, level:"Hold the Abbey", field:{name:"Hold the Abbey", win:"clear", turns:0, biome:"marsh", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
     {march:3, level:"The Sunken Keep", field:{name:"The Sunken Keep", win:"clear", turns:0, biome:"hall", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
     {march:3, level:"The Burning Abbey", field:{name:"The Burning Abbey", win:"clear", turns:0, biome:"hall", brief:"", map:[".......", ".......", ".......", ".......", ".......", ".......", "......."], ground:[".......", ".......", ".......", ".......", ".......", ".......", "......."], knights:[], undead:[], schedule:{}}},
@@ -11340,18 +11340,16 @@ const App = (() => {
     all.forEach((m, i) => {
       const done = m.fields.length > 0 && m.won === m.fields.length;
       const row = document.createElement("button");
-      /* a march not bought yet: a tap offers the full road. One purchase opens
-         every march still to buy, so only the first of them carries the price,
-         saying so, or two locks with a price each read as two to pay */
-      const buy = !m.paid, priced = buy && all.findIndex(o => !o.paid) === i;
+      /* a march not bought yet: a tap offers the full road, and the sheet
+         names the price. The map shows only the lock (a price beside it sat
+         on the plate's words on the phone, Version 233) */
+      const buy = !m.paid;
       row.className = "msec s" + i + (m.open && !done && m.fields.length ? " on" : "") + (m.open ? " open" : " locked") + (buy ? " buy" : "");
       if(!(m.open && m.fields.length || buy)){ row.disabled = true; row.setAttribute("aria-label", m.name + ", locked"); }
       row.innerHTML = '<span class="mplate"><span class="mt"></span><span class="msub"></span><span class="md"></span>' +
         (m.fields.length ? '<span class="mpips">' + m.fields.map(f => '<i' + (March.isWon(f.key) ? ' class="won"' : '') + '></i>').join("") + '</span>' : '') +
         '</span>' +
-        (done ? '<span class="cleared">Won</span>' : m.open ? "" : '<span class="lockp"><span class="lock">' + LOCK + '</span>' +
-          (priced && Unlock.price() ? '<span class="price"></span>' : '') + '</span>');
-      if(row.querySelector(".price")) row.querySelector(".price").textContent = Unlock.price() + (all.filter(o => !o.paid).length > 1 ? " for both" : "");
+        (done ? '<span class="cleared">Won</span>' : m.open ? "" : '<span class="lockp"><span class="lock">' + LOCK + '</span></span>');
       row.querySelector(".mt").textContent = m.name;
       row.querySelector(".msub").textContent = MARCH_SUBS[i] || "";
       row.querySelector(".md").textContent = buy && m.earned ? "Ready when you are"
