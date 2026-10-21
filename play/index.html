@@ -2622,7 +2622,7 @@ const DESIGN = false;
 /* the game's version, shown small at the foot of the menu: the release and,
    in brackets, the build, which is the published version's number and goes
    up by one with every publish (see CLAUDE.md, Publishing) */
-const VERSION = "1.0.1", BUILD = 233;
+const VERSION = "1.0.1", BUILD = 234;
 /* the browser teaser on the website (tools/build-release.js --demo): the
    tutorial and The First March, the rest of the road only in name, and the
    purchase sheet pointing at the full game instead of a store */
@@ -10954,6 +10954,17 @@ const Achieve = (() => {
     }
   }
   const counts = () => ctx.kind === "tutorial" || ctx.kind === "run";
+  /* the store's own rating sheet, asked once: a few seconds after the win
+     that completes The First March, when the player has seen what the game
+     is (Version 234). The store decides whether it shows. */
+  function rate(){
+    if(ctx.kind !== "run") return;
+    try { if(localStorage.getItem("barrow.rate.v1")) return; } catch(e){ return; }
+    const first = March.marches(March.fields())[0];
+    if(!first || !first.fields.length || !first.fields.every(f => March.isWon(f.key))) return;
+    try { localStorage.setItem("barrow.rate.v1", String(Date.now())); } catch(e){}
+    setTimeout(() => { try { const n = gc() || pg(); if(n && n.review) n.review().catch(() => {}); } catch(e){} }, 3500);
+  }
   const progress = () => ({tut:[Progress.count(), E.MISSIONS.length],
     marches:March.marches(March.fields()).map(m => m.fields.map(f =>
       ({won:March.isWon(f.key), stars:Stars.get(f.key), opened:Hints.isOpen(f.key)})))});
@@ -10969,6 +10980,7 @@ const Achieve = (() => {
       if(!counts()) return;
       const f = ctx.kind === "run" && March.fields()[ctx.at];
       unlock(E.achWin(S, ctx.kind === "run", !!f && f.march === 2).concat(E.achProgress(progress())));
+      rate();
     },
     /* at start: sign in to Game Center, grant quietly what the kept
        progress has earned (a player from before these), and tell the native
